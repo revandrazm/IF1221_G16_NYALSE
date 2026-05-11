@@ -55,3 +55,6 @@ kartu(wild, drawFour).
 
 % Convert fakta kartu ke list
 loadKartu(ListKartu):- (findall([W, J], kartu(W, J), ListKartu)).
+
+printKartu :-
+	loadKartu(X), write(X).
