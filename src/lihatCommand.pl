@@ -14,3 +14,9 @@ lihatCommand :-
     write('Aksi pendukung yang tersedia:'),
     nl,
     !.
+
+printList([], _).
+printList([Head|Tail], N) :-
+    format('~w. ~w~n', [N, Head]),
+    NNext is N + 1,
+    printList(Tail, NNext).
