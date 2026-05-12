@@ -1,12 +1,13 @@
 % Deklarasi fakta dinamis
-:- dynamic kartu_pemain/2.
-:- dynamic giliran/1.
-:- dynamic urutan_pemain/1.
-:- dynamic deck/1.
-:- dynamic discard_top/1.
-:- dynamic warna_aktif/1.
-:- dynamic arah_permainan/1.
+:- dynamic(kartu_pemain/2).			% Nama pemain, list kartu []
+:- dynamic(giliran/1).					% Nama pemain
+:- dynamic(urutan_pemain/1).		% List nama []
+:- dynamic(deck/1).							% Sisa kartu di deck
+:- dynamic(discard_top/1).			% Kartu terakhir
+:- dynamic(warna_aktif/1).			% Bisa beda akibat wild
+:- dynamic(arah_permainan/1).		% kanan/kiri (terpengaruh reverse)
 
+/* Daftar Kartu Valid*/
 kartu(merah, skip).
 kartu(merah, reverse).
 kartu(merah, drawTwo).
@@ -59,8 +60,8 @@ kartu(hijau, 6).
 kartu(hijau, 7).
 kartu(hijau, 8).
 kartu(hijau, 9).
-kartu(wild, normal).
-kartu(wild, drawFour).
+kartu(hitam, wild).
+kartu(hitam, drawFour).
 
 % Convert fakta kartu ke list
 
