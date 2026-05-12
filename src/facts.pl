@@ -1,3 +1,12 @@
+% Deklarasi fakta dinamis
+:- dynamic kartu_pemain/2.
+:- dynamic giliran/1.
+:- dynamic urutan_pemain/1.
+:- dynamic deck/1.
+:- dynamic discard_top/1.
+:- dynamic warna_aktif/1.
+:- dynamic arah_permainan/1.
+
 kartu(merah, skip).
 kartu(merah, reverse).
 kartu(merah, drawTwo).
@@ -54,7 +63,6 @@ kartu(wild, normal).
 kartu(wild, drawFour).
 
 % Convert fakta kartu ke list
-loadKartu(ListKartu):- (findall([W, J], kartu(W, J), ListKartu)).
 
 printKartu :-
 	loadKartu(X), write(X).
