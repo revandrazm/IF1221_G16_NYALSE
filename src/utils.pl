@@ -44,7 +44,10 @@ h_ListGetElement([_|T], I, Element) :-
     I > 0,
     I1 is I - 1,
     h_ListGetElement(T, I1, Element).
+<<<<<<< HEAD
 
 h_ListIsMember(X, [X|_]).
 h_ListIsMember(X, [_|T]) :- 
     h_ListIsMember(X, T).
+=======
+>>>>>>> ea5845a (refactor : memindahkan helper pada deck.pl ke utils.pl dan fix beberapa bug)
