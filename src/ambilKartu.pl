@@ -3,17 +3,18 @@
 
 ambilKartu :-
     giliran(Pemain),
-    efekTerakhir(Efek),
+    kartu_pemain(Pemain, KartuSebelum),
+    discard_top(Kartu(W, J)),
 
-    (Efek == drawTwo -> Jumlah = 2 ;
-     Efek == drawFour -> Jumlah = 4 ;
+    (J == drawTwo -> Jumlah = 2 ;
+     J == drawFour -> Jumlah = 4 ;
      Jumlah = 1),
 
     ambilSejumlahKartu(Jumlah, KartuBaru),
-    tambahKeTangan(Pemain, KartuBaru),
+    append(KartuSebelum, KartuBaru, KartuSesudah),
 
-    retract(efekTerakhir(Efek)),
-    asserta(efekTerakhir(none)),
+    retract(kartu_pemain(Pemain, KartuSebelum)),
+    asserta(kartu_pemain(Pemain, KartuSesudah)),
 
     giliranSelanjutnya.
 
