@@ -2,9 +2,6 @@
 :- include('helper.pl').
 
 /* Helper */
-formatCard(kartu(Warna,Jenis)):-
-	format('~w-~w',[Warna, Jenis]).
-
 lihatHelper([], _) :- !.
 lihatHelper([kartu(Warna,Jenis)|T], N) :-
 	format('~d. ', [N]), formatCard(kartu(Warna, Jenis)), nl,
@@ -20,6 +17,13 @@ formatUrutan([H|T]):-
 	write(H),
 	formatUrutanHelp(T).
 
+printUrutan([], _) :- !.
+printUrutan([H|T], N):-
+	format('Nama pemain ~d: ~s', [N, H]), nl,
+	kartu_pemain(H,ListKartu), jumlahKartu(ListKartu,Ans),
+	format('Jumlah kartu: ~d', [Ans]), nl, nl.
+
+
 /*
 printUrutan([], _) :- .
 printUrutan([H|T], N):-
@@ -31,8 +35,10 @@ lihatKartu :-
 	write('Berikut kartu yang anda miliki'), nl,
 	lihatHelper(Deck,1).
 
+
 cekInfo :-
 	discard_top(Top), urutan_pemain(Urutan), arah_permainan(Arah),
 	reverse(Urutan,UrutanRev),
 	write('Kartu discard top: '), formatCard(Top), nl, nl,
 	write('Urutan pemain: '), formatUrutan(Urutan), nl, nl.
+	printUrutan(Urutan, 1).
