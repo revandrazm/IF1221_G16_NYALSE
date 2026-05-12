@@ -36,8 +36,8 @@ printAksiPendukung :-
     printList(Out, 1).
 
 /* Helper */
-lihatHelper([], _) :- !.
-lihatHelper([kartu(Warna,Jenis)|T], N) :-
+lihatKartu([], _) :- !.
+lihatKartu([kartu(Warna,Jenis)|T], N) :-
 	format('~d. ', [N]), formatCard(kartu(Warna, Jenis)), nl,
 	N2 is N+1,
 	lihatHelper(T,N2).
@@ -55,20 +55,14 @@ printUrutan([], _) :- !.
 printUrutan([H|T], N):-
 	format('Nama pemain ~d: ~s', [N, H]), nl,
 	kartu_pemain(H,ListKartu), jumlahKartu(ListKartu,Ans),
-	format('Jumlah kartu: ~d', [Ans]), nl, nl.
-
-
-/*
-printUrutan([], _) :- .
-printUrutan([H|T], N):-
-*/
+	format('Jumlah kartu: ~d', [Ans]), nl, nl,
+	N2 is N + 1, printUrutan(T,N2).
 
 /* Utama */
 lihatKartu :-
 	giliran(Player), kartu_pemain(Player, Deck), nl,
 	write('Berikut kartu yang anda miliki'), nl,
 	lihatHelper(Deck,1).
-
 
 cekInfo :-
 	discard_top(Top), urutan_pemain(Urutan), arah_permainan(Arah),
