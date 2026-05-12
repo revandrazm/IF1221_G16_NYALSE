@@ -44,3 +44,7 @@ h_ListGetElement([_|T], I, Element) :-
     I > 0,
     I1 is I - 1,
     h_ListGetElement(T, I1, Element).
+
+h_ListIsMember(X, [X|_]).
+h_ListIsMember(X, [_|T]) :- 
+    h_ListIsMember(X, T).
