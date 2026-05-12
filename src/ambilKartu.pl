@@ -1,7 +1,8 @@
 :- include('facts.pl').
+:- include('deck.pl').
 
 ambilKartu :-
-    giliranSekarang(Pemain),
+    giliran(Pemain),
     efekTerakhir(Efek),
 
     (Efek == drawTwo -> Jumlah = 2 ;
