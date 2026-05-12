@@ -54,7 +54,7 @@ formatUrutan([H|T]):-
 printUrutan([], _) :- !.
 printUrutan([H|T], N):-
 	format('Nama pemain ~d: ~s', [N, H]), nl,
-	kartu_pemain(H,ListKartu), jumlahKartu(ListKartu,Ans),
+	kartu_pemain(H,ListKartu), h_ListLength(ListKartu,Ans),
 	format('Jumlah kartu: ~d', [Ans]), nl, nl,
 	N2 is N + 1, printUrutan(T,N2).
 
