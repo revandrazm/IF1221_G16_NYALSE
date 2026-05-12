@@ -11,8 +11,10 @@ aksiPendukung(cekInfo).
 lihatCommand :-
     write('Aksi utama yang tersedia:'),
     nl,
+    printAksiUtama,
     write('Aksi pendukung yang tersedia:'),
     nl,
+    printAksiPendukung,
     !.
 
 printList([], _).
@@ -20,3 +22,11 @@ printList([Head|Tail], N) :-
     format('~w. ~w~n', [N, Head]),
     NNext is N + 1,
     printList(Tail, NNext).
+
+printAksiUtama :-
+    findall(Aksi, aksiUtama(Aksi), Out),
+    printList(Out, 1).
+
+printAksiPendukung :-
+    findall(Aksi, aksiPendukung(Aksi), Out),
+    printList(Out, 1).
