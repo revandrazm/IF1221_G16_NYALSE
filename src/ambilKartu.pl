@@ -18,7 +18,10 @@ ambilKartu :-
 
 ambilSejumlahKartu(0, []) :- !.
 ambilSejumlahKartu(Jumlah, [Kartu|Sisa]) :-
-    loadKartu(DekKartu)
-    pickRandom(Kartu, DekKartu),
-    NBaru is N - 1,
-    ambilSejumlahKartu(NBaru, Sisa).
+    loadKartu(DekKartu),
+    IndeksPertama is 0,
+    IndeksTerakhir is 53 + 1,
+    random(IndeksPertama, IndeksTerakhir, IndeksPilih),
+    nth0(IndeksPilih, DekKartu, Kartu),
+    JumlahBaru is Jumlah - 1,
+    ambilSejumlahKartu(JumlahBaru, Sisa).
