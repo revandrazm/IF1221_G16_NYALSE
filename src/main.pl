@@ -11,7 +11,7 @@ startGame :-
 
     write('*******************************************'), nl,
     write('*         SELAMAT DATANG DI UNI!          *'), nl,
-    write('*******************************************'), nl,  
+    write('*******************************************'), nl,
 
     inputJumlahPemain(N),
     inisialisasiPemain(N, ListPemain),
