@@ -12,6 +12,7 @@ lihatCommand :-
     write('Aksi utama yang tersedia:'),
     nl,
     printAksiUtama,
+    nl,
     write('Aksi pendukung yang tersedia:'),
     nl,
     printAksiPendukung,
