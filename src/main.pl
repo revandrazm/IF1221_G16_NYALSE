@@ -1,13 +1,15 @@
 :- include('facts.pl').
 :- include('deck.pl').
 :- include('player.pl').
+
 startGame :-
     write('*******************************************'), nl,
     write('*         SELAMAT DATANG DI UNI!          *'), nl,
     write('*******************************************'), nl,  
 
     inputJumlahPemain(N),
-    inisialisasiPemain
+    inisialisasiPemain(N, ListPemain).
+
 inputJumlahPemain(N):-
     write('Masukkan jumlah pemain (2-4, akhiri dengan titik): '),
     read(Input),
