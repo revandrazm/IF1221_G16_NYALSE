@@ -1,14 +1,21 @@
+isMember(X, [X|_]).
+isMember(X, [_|T]) :- isMember(X, T).
+
 inisialisasiPemain(N, ListPemain) :-
     inputNama(N, [], ListPemainUtuh),
-    ListPemain = ListPemainUtuh.
+    ListPemain = ListPemainUtuh,
+
+    assertz(urutan_pemain(ListPemain)),
+    [FirstPlayer|_] = ListPemain,
+    assertz(giliran(FirstPlayer)).
 
 inputNama(0, Acc, Acc) :- !.
 inputNama(N, Acc, Result) :-
     N > 0,
     write('Masukkan nama pemain (akhiri dengan titik): '),
     read(Nama),
-    (member(Nama, Acc) ->
-        write('Nama sudah digunakan, gunakan nama lain!'),
+    (isMember(Nama, Acc) ->
+        write('Nama sudah digunakan, gunakan nama lain!'), nl,
         inputNama(N, Acc, Result)
     ;
         N1 is N - 1,
