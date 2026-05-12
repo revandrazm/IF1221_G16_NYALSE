@@ -4,7 +4,7 @@
 ambilKartu :-
     giliran(Pemain),
     kartu_pemain(Pemain, KartuSebelum),
-    discard_top(Kartu(W, J)),
+    discard_top(kartu(W, J)),
 
     (J == drawTwo -> Jumlah = 2 ;
      J == drawFour -> Jumlah = 4 ;
@@ -16,7 +16,7 @@ ambilKartu :-
     retract(kartu_pemain(Pemain, KartuSebelum)),
     asserta(kartu_pemain(Pemain, KartuSesudah)),
 
-    giliranSelanjutnya.
+    format('Kartu ~w telah diperbarui. Total kartu sekarang: ~w~n', [Pemain, KartuSesudah]).
 
 ambilSejumlahKartu(0, []) :- !.
 ambilSejumlahKartu(Jumlah, [Kartu|Sisa]) :-
