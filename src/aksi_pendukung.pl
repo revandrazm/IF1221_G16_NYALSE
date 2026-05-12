@@ -62,11 +62,10 @@ printUrutan([H|T], N):-
 lihatKartu :-
 	giliran(Player), kartu_pemain(Player, Deck), nl,
 	write('Berikut kartu yang anda miliki'), nl,
-	lihatHelper(Deck,1).
+	lihatKartu(Deck,1).
 
 cekInfo :-
-	discard_top(Top), urutan_pemain(Urutan), arah_permainan(Arah),
-	reverse(Urutan,UrutanRev),
+	discard_top(Top), urutan_pemain(Urutan),
 	write('Kartu discard top: '), formatCard(Top), nl, nl,
 	write('Urutan pemain: '), formatUrutan(Urutan), nl, nl.
 	printUrutan(Urutan, 1).
