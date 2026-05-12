@@ -1,6 +1,7 @@
 :- include('facts.pl').
 :- include('deck.pl').
 :- include('player.pl').
+
 startGame :-
     write('*******************************************'), nl,
     write('*         SELAMAT DATANG DI UNI!          *'), nl,
