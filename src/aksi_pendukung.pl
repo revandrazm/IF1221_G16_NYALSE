@@ -1,3 +1,6 @@
+:- include('facts.pl').
+:- include('helper.pl').
+
 aksiUtama(mainkanKartu(indexKartu)).
 aksiUtama(ambilKartu).
 aksiUtama(tantang).
@@ -31,8 +34,6 @@ printAksiUtama :-
 printAksiPendukung :-
     findall(Aksi, aksiPendukung(Aksi), Out),
     printList(Out, 1).
-:- include('facts.pl').
-:- include('helper.pl').
 
 /* Helper */
 lihatHelper([], _) :- !.
