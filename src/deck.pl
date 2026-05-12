@@ -57,7 +57,7 @@ bagiKartu([Pemain|SisaPemain], Deck, SisaDeck):-
     ambilKartu(KartuPemain, 7, Deck, DeckSementara),
     assertz(kartu_pemain(Pemain, KartuPemain)),
     bagiKartu(SisaPemain, DeckSementara, SisaDeck).
-    
+
 ambilKartu([], 0, Deck, Deck) :- !.
 ambilKartu([H|TAmbil], N, [H|TDeck], SisaDeck) :-
     N > 0,
@@ -78,8 +78,3 @@ initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
 
 printKartu :-
 	loadKartu(X), write(X).
-
-<<<<<<< HEAD
-    
-=======
->>>>>>> 80bad5e (refactor : mengubah load kartu dan shuffe agar tidak menggunakan fungsi bawaan, feat : menambahkan fitur bagi kartu, dan inisialisasi discard pile)
