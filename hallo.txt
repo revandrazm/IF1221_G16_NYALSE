@@ -1,0 +1,12 @@
+urutan_pemain(['1','2','3','4','5','AB']).
+giliran:'1'.
+discard_top:merah-skip.
+warna_aktif:merah.
+arah_permainan:kanan.
+status_UNI:['3','4','AB'].
+kartu('1'):[1-2,2-3,3-4].
+kartu('2'):[1-2,2-3,3-4].
+kartu('3'):[1-2].
+kartu('4'):[1-2].
+kartu('5'):[1-2,2-3,3-4].
+kartu('AB'):[1-2].
