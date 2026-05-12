@@ -1,5 +1,4 @@
-isMember(X, [X|_]).
-isMember(X, [_|T]) :- isMember(X, T).
+:- include('utils.pl').
 
 inisialisasiPemain(N, ListPemain) :-
     inputNama(N, [], ListPemainUtuh),
@@ -14,7 +13,7 @@ inputNama(N, Acc, Result) :-
     N > 0,
     write('Masukkan nama pemain (akhiri dengan titik): '),
     read(Nama),
-    (isMember(Nama, Acc) ->
+    (h_ListIsMember(Nama, Acc) ->
         write('Nama sudah digunakan, gunakan nama lain!'), nl,
         inputNama(N, Acc, Result)
     ;
