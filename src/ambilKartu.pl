@@ -1,3 +1,5 @@
+:- include('facts.pl').
+
 ambilKartu :-
     giliranSekarang(Pemain),
     efekTerakhir(Efek),
@@ -13,3 +15,10 @@ ambilKartu :-
     asserta(efekTerakhir(none)),
 
     giliranSelanjutnya.
+
+ambilSejumlahKartu(0, []) :- !.
+ambilSejumlahKartu(Jumlah, [Kartu|Sisa]) :-
+    loadKartu(DekKartu)
+    pickRandom(Kartu, DekKartu),
+    NBaru is N - 1,
+    ambilSejumlahKartu(NBaru, Sisa).
