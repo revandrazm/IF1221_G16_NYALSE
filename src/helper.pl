@@ -20,6 +20,12 @@ jumlahKartu([H|T],Acc,Ans) :-
 jumlahKartu(List, Ans) :-
 	jumlahKartu(List,0,Ans).
 
+/* Implementasi fungsi append */
+appendHelper([], List, List).
+
+appendHelper([Head|Tail], List, [Head|HasilTail]) :-
+    appendHelper(Tail, List, HasilTail).
+
 /* Implementasi fungsi nth0 */
 nth0Helper(0, [Head|_], Head).
 
