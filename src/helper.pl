@@ -27,3 +27,10 @@ nth0Helper(Index, [_|Tail], Element) :-
     Index > 0,
     IndexBaru is Index - 1,
     nth0Helper(IndexBaru, Tail, Element).
+
+/* Implementasi fungsi length */
+lengthHelper([], 0).
+
+lengthHelper([_|Tail], Length) :-
+    lengthHelper(Tail, TailLength),
+    Length is TailLength + 1.
