@@ -12,7 +12,7 @@ ambilKartu :-
      Jumlah = 1),
 
     ambilSejumlahKartu(Jumlah, KartuBaru),
-    append(KartuSebelum, KartuBaru, KartuSesudah),      % Ilegal
+    appendHelper(KartuSebelum, KartuBaru, KartuSesudah),
 
     retract(kartu_pemain(Pemain, KartuSebelum)),
     asserta(kartu_pemain(Pemain, KartuSesudah)),
