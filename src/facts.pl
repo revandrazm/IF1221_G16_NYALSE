@@ -10,4 +10,4 @@
 /* Daftar Kartu Valid*/
 warnaDasar([merah, kuning, hijau, biru]).
 jenisKartu([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, skip, reverse, drawTwo]).
-kartuHitam([kartu(hitam, normal), kartu(hitam, drawFour)]).
+kartuHitam([kartu(hitam, wild), kartu(hitam, wildDrawFour)]).
