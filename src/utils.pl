@@ -48,3 +48,11 @@ h_ListGetElement([_|T], I, Element) :-
 h_ListIsMember(X, [X|_]).
 h_ListIsMember(X, [_|T]) :- 
     h_ListIsMember(X, T).
+
+h_Shuffle([], []).
+h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
+    h_ListLength(Awal, Panjang),
+    random(0, Panjang, Index),
+    h_ListGetElement(Awal, Index, ElemenAcak),
+    h_ListRemoveAtIndex(Awal, Index, AwalSisa),
+    h_Shuffle(AwalSisa, SisaAcak).
