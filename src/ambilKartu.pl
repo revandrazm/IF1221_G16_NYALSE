@@ -37,7 +37,7 @@ giliranSelanjutnya :-
     lengthHelper(DaftarPemain, JumlahPemain),
     IndexBaru is (IndexLama + 1),
 
-    nth0(IndexBaru, DaftarPemain, PemainBerikutnya),
+    nth0Helper(IndexBaru, DaftarPemain, PemainBerikutnya),
 
     retract(giliran(PemainSekarang)),
     asserta(giliran(PemainBerikutnya)).
