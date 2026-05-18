@@ -36,7 +36,9 @@ giliranSelanjutnya :-
 
     h_ListIndexOf(DaftarPemain, PemainSekarang, IndexLama),
     h_ListLength(DaftarPemain, JumlahPemain),
-    IndexBaru is (IndexLama + 1),
+    (Arah == kanan ->
+     IndexBaru is (IndexLama + 1) mod JumlahPemain ;
+     IndexBaru is (IndexLama - 1 + JumlahPemain) mod JumlahPemain),
 
     h_ListGetElement(DaftarPemain, IndexBaru, PemainBerikutnya),
 
