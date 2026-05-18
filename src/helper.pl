@@ -19,3 +19,11 @@ jumlahKartu([H|T],Acc,Ans) :-
 	jumlahKartu(T, Acc2, Ans).
 jumlahKartu(List, Ans) :-
 	jumlahKartu(List,0,Ans).
+
+/* Implementasi fungsi nth0 */
+nth0Helper(0, [Head|_], Head).
+
+nth0Helper(Index, [_|Tail], Element) :-
+    Index > 0,
+    IndexBaru is Index - 1,
+    nth0Helper(IndexBaru, Tail, Element).
