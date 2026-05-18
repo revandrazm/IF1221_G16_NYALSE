@@ -34,7 +34,7 @@ giliranSelanjutnya :-
     urutan_pemain(DaftarPemain),
 
     nth0Helper(IndexLama, DaftarPemain, PemainSekarang),
-    length(DaftarPemain, JumlahPemain),               % Ilegal
+    lengthHelper(DaftarPemain, JumlahPemain),
     IndexBaru is (IndexLama + 1),
 
     nth0(IndexBaru, DaftarPemain, PemainBerikutnya),
