@@ -1,6 +1,6 @@
 :- include('aksi_utama.pl').
 :- include('facts.pl').
-:- include('ambilKartu.pl').
+:- include('aksi_utama.pl').
 
 /* Helpers */
 add_uni_status(Pemain) :-

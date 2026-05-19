@@ -1,3 +1,35 @@
+:- include('state.pl').
+
+/* Initialize game State */
+testInit :-
+    retractall(giliran(_)),
+    retractall(urutan_pemain(_)),
+    retractall(arah_permainan(_)),
+    retractall(kartu_pemain(_, _)),
+    retractall(discard_top(_)),
+
+    asserta(giliran(player1)),
+    asserta(urutan_pemain([player1, player2, player3])),
+    asserta(arah_permainan(kiri)),
+    asserta(kartu_pemain(player1, [])),
+    asserta(kartu_pemain(player2, [])),
+    asserta(kartu_pemain(player3, [])),
+    asserta(discard_top(kartu(merah, 5))).
+
+/* Specific Utils */
+h_FormatCard(kartu(Warna,Jenis)) :-
+	format('~w-~w',[Warna,Jenis]).
+
+h_Shuffle([], []).
+h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
+    h_ListLength(Awal, Panjang),
+    random(0, Panjang, Index),
+    h_ListGetElement(Awal, Index, ElemenAcak),
+    h_ListRemoveAtIndex(Awal, Index, AwalSisa),
+    h_Shuffle(AwalSisa, SisaAcak).
+
+
+/* Basic Utils */
 h_ListLength([], 0).
 h_ListLength([_|T], N) :-
     h_ListLength(T, N2),
@@ -48,44 +80,3 @@ h_ListGetElement([_|T], I, Element) :-
 h_ListIsMember(X, [X|_]).
 h_ListIsMember(X, [_|T]) :-
     h_ListIsMember(X, T).
-
-h_FormatCard(kartu(Warna,Jenis)) :-
-	format('~w-~w',[Warna,Jenis]).
-
-h_FormatCard(kartu(Warna,Jenis), Stream) :-
-  format(Stream, '~w-~w',[Warna,Jenis]).
-
-h_FormatDeck(Deck) :- h_FormatDeck(Deck, 0).
-h_FormatDeck(Deck, 0) :- write('['), h_FormatDeck(Deck, 1).
-h_FormatDeck([H|T], 1) :- h_FormatCard(H), write(','), h_FormatDeck(T, 1).
-h_FormatDeck([], 1) :- write(']'), !.
-
-h_FormatDeck(Deck, Stream) :- h_FormatDeck(Deck, Stream, 0).
-h_FormatDeck(Deck, Stream, 0) :- write(Stream, '['), h_FormatDeck(Deck, Stream, 1).
-h_FormatDeck([H|[]], Stream, 1) :- h_FormatCard(H, Stream), h_FormatDeck([], Stream, 1). 
-h_FormatDeck([H|T], Stream, 1) :- T \= [], h_FormatCard(H, Stream), write(Stream, ','), h_FormatDeck(T, Stream, 1).
-h_FormatDeck([], Stream, 1) :- write(Stream, ']'), !.
-
-h_Shuffle([], []).
-h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
-    h_ListLength(Awal, Panjang),
-    random(0, Panjang, Index),
-    h_ListGetElement(Awal, Index, ElemenAcak),
-    h_ListRemoveAtIndex(Awal, Index, AwalSisa),
-    h_Shuffle(AwalSisa, SisaAcak).
-
-testInit :-
-    retractall(giliran(_)),
-    retractall(urutan_pemain(_)),
-    retractall(arah_permainan(_)),
-    retractall(kartu_pemain(_, _)),
-    retractall(discard_top(_)),
-
-    asserta(giliran(player1)),
-    asserta(urutan_pemain([player1, player2, player3])),
-    asserta(arah_permainan(kiri)),
-    asserta(kartu_pemain(player1, [])),
-    asserta(kartu_pemain(player2, [])),
-    asserta(kartu_pemain(player3, [])),
-    asserta(discard_top(kartu(merah, 5))).
-
