@@ -1,10 +1,11 @@
 :- include('state.pl').
 :- include('player.pl').
+:- include('utils.pl').
 
 giliranSelanjutnya :-
     giliran(PemainSekarang),
-    urutan_pemain(DaftarPemain),
-    arah_permainan(Arah),
+    urutanPemain(DaftarPemain),
+    arahPermainan(Arah),
 
     h_ListIndexOf(DaftarPemain, PemainSekarang, IndeksLama),
     h_ListLength(DaftarPemain, JumlahPemain),

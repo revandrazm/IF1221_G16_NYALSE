@@ -1,5 +1,6 @@
 :- include('state.pl').
 :- include('utils.pl').
+:- include('deck.pl').
 
 /* Daftar Aksi yang Tersedia */
 daftarAksiUtama([mainkanKartu(indeksKartu), ambilKartu, tantang, uni(indeksKartu), tangkap(namaPemain)]).
@@ -38,7 +39,7 @@ lihatKartu([kartu(Warna,Jenis)|Sisa], N) :-
 formatUrutanSisa([]) :- !.
 formatUrutanSisa([H|T]) :-
 	write(' - '), write(H),
-	formatUrutan(T).
+	formatUrutanSisa(T).
 
 formatUrutan([H|T]):-
 	write(H),
@@ -46,7 +47,7 @@ formatUrutan([H|T]):-
 
 printUrutan([], _) :- !.
 printUrutan([H|T], N):-
-	format('Nama pemain ~d: ~s', [N, H]), nl,
+	format('Nama pemain ~d: ~w', [N, H]), nl,
 	kartuPemain(H, DaftarKartu), 
 	h_ListLength(DaftarKartu, JumlahKartu),
 	format('Jumlah kartu: ~d', [JumlahKartu]), nl, nl,
@@ -105,4 +106,4 @@ printPeringkat([], _) :- !.
 printPeringkat([(Pemain, Poin)|Sisa], Peringkat) :-
     format('~w. ~w (~w Poin)~n', [Peringkat, Pemain, Poin]),
     PeringkatSelanjutnya is Peringkat + 1,
-    printRank(Sisa, PeringkatSelanjutnya).
+    printPeringkat(Sisa, PeringkatSelanjutnya).

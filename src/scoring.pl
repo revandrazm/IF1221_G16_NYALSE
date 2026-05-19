@@ -46,7 +46,7 @@ peringkatPemain(DaftarPoin, PeringkatPoin) :-
     insertionSort(DaftarPoin, PeringkatPoin).
 
 endGame :-
-    giliran(Pemenang),
+    cekGameOver(Pemenang),s
     format('Permainan selesai! ~w menghabiskan semua kartunya!~n~n', [Pemenang]),
     write('Berikut perhitungan poin sisa kartu:'), nl,
     hitungPoinSemua(DaftarPoin),
@@ -57,7 +57,4 @@ endGame :-
     format('~nSelamat ~w menjadi pemenang!~n', [Pemenang]).
 
 cekGameOver(Pemenang):-
-    giliran(Pemenang),
-    kartuPemain(Pemenang, DaftarKartu),
-    h_ListLength(DaftarKartu, JumlahKartu),
-    JumlahKartu =:= 0.
+    kartuPemain(Pemenang, []), !.

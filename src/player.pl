@@ -19,18 +19,18 @@ inputNama(JumlahPemain, Akumulasi, Hasil) :-
     ->  write('Nama sudah digunakan, gunakan nama lain!'), nl,
         inputNama(JumlahPemain, Akumulasi, Hasil)
     ;   JumlahPemainSisa is JumlahPemain - 1,
-        append(Akumulasi, [Nama], AkumulasiBerikutnya),
+        h_ListAppendElement(Akumulasi, Nama, AkumulasiBerikutnya),
         inputNama(JumlahPemainSisa, AkumulasiBerikutnya, Hasil)
     ).
 
 bagiKartu([], Deck, Deck).
 bagiKartu([Pemain|SisaPemain], Deck, SisaDeck):-
-    ambilKartu(KartuPemain, 7, Deck, DeckSementara),
+    ambilKartuAwal(KartuPemain, 7, Deck, DeckSementara),
     assertz(kartuPemain(Pemain, KartuPemain)),
     bagiKartu(SisaPemain, DeckSementara, SisaDeck).
 
-ambilKartu([], 0, Deck, Deck) :- !.
-ambilKartu([KartuTerambil|SisaAmbilan], JumlahKartuDiambil, [KartuTerambil|SisaDeck], DeckAkhir) :-
+ambilKartuAwal([], 0, Deck, Deck) :- !.
+ambilKartuAwal([KartuTerambil|SisaAmbilan], JumlahKartuDiambil, [KartuTerambil|SisaDeck], DeckAkhir) :-
     JumlahKartuDiambil > 0,
     SisaJumlahKartuDiambil is JumlahKartuDiambil - 1,
-    ambilKartu(SisaAmbilan, SisaJumlahKartuDiambil, SisaDeck, DeckAkhir).
+    ambilKartuAwal(SisaAmbilan, SisaJumlahKartuDiambil, SisaDeck, DeckAkhir).
