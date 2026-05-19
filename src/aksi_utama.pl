@@ -13,10 +13,6 @@ mainkanKartu(Idx) :-
 
     giliranSelanjutnya.
 
-kartuMainValid(kartu(Warna, Jenis)) :-
-    discardTop(kartu(Warna2,Jenis2)),
-    Warna=Warna2, Jenis=Jenis2.
-
 ambilKartu :-
     giliran(Pemain),
     kartu_pemain(Pemain, KartuSebelum),
@@ -43,21 +39,3 @@ ambilSejumlahKartu(Jumlah, [Kartu|Sisa]) :-
     h_ListGetElement(DekKartu, IndeksPilih, Kartu),
     JumlahBaru is Jumlah - 1,
     ambilSejumlahKartu(JumlahBaru, Sisa).
-
-giliranSelanjutnya :-
-    giliran(PemainSekarang),
-    urutan_pemain(DaftarPemain),
-    arah_permainan(Arah),
-
-    h_ListIndexOf(DaftarPemain, PemainSekarang, IndexLama),
-    h_ListLength(DaftarPemain, JumlahPemain),
-    (Arah == kanan ->
-     IndexBaru is (IndexLama + 1) mod JumlahPemain ;
-     IndexBaru is (IndexLama - 1 + JumlahPemain) mod JumlahPemain),
-
-    h_ListGetElement(DaftarPemain, IndexBaru, PemainBerikutnya),
-
-    retract(giliran(PemainSekarang)),
-    asserta(giliran(PemainBerikutnya)),
-
-    format('Giliran ~w.', [PemainBerikutnya]).
