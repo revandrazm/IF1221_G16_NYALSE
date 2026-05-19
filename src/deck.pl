@@ -1,4 +1,4 @@
-:- include('facts.pl').
+:- include('state.pl').
 :- include('utils.pl').
 
 /* Daftar Kartu Valid*/

@@ -1,13 +1,17 @@
-:- include('facts.pl').
+:- include('state.pl').
 :- include('deck.pl').
 :- include('player.pl').
-:- dynamic(gameRunning/1).
+:- include('turn.pl').
+:- include('display.pl').
+:- include('actions.pl').
+:- include('scoring.pl').
+:- dynamic(gameBerjalan/1).
 :- initialization(main).
 
 main :- startGame.
 
 startGame :-
-    assertz(gameRunning(true)),
+    assertz(gameBerjalan(true)),
 
     write('*******************************************'), nl,
     write('*         SELAMAT DATANG DI UNI!          *'), nl,
@@ -33,14 +37,3 @@ inputJumlahPemain(N):-
         write('Jumlah pemain tidak valid! Masukkan jumlah pemain lagi.'), nl,
         inputJumlahPemain(N)
     ).
-
-endgame :-
-    hitungPoinHelper([], 0);
-    hitungPoinHelper([kartu(W,J)|T], TotalPoin) :-
-        nilaiKartu(J, Nilai),
-        hitungPoinHelper(T, PoinSekarang),
-        TotalPoin is PoinSekarang + Nilai.
-    hitungPoinPemain(Pemain, Poin) :-
-        kartu_pemain(Pemain, SisaKartu),
-        hitungPoinHelper(SisaKartu, Poin).
-    

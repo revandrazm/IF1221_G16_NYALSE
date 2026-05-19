@@ -1,5 +1,5 @@
-:- include('facts.pl').
-:- include('helper.pl').
+:- include('state.pl').
+:- include('utils.pl').
 
 aksiUtama(mainkanKartu(indexKartu)).
 aksiUtama(ambilKartu).
@@ -38,9 +38,9 @@ printAksiPendukung :-
 /* Helper */
 lihatKartu([], _) :- !.
 lihatKartu([kartu(Warna,Jenis)|T], N) :-
-	format('~d. ', [N]), formatCard(kartu(Warna, Jenis)), nl,
+	format('~d. ', [N]), h_FormatCard(kartu(Warna, Jenis)), nl,
 	N2 is N+1,
-	lihatHelper(T,N2).
+	lihatKartu(T,N2).
 
 formatUrutanHelp([]) :- !.
 formatUrutanHelp([H|T]) :-
@@ -66,6 +66,6 @@ lihatKartu :-
 
 cekInfo :-
 	discard_top(Top), urutan_pemain(Urutan),
-	write('Kartu discard top: '), formatCard(Top), nl, nl,
+	write('Kartu discard top: '), h_FormatCard(Top), nl, nl,
 	write('Urutan pemain: '), formatUrutan(Urutan), nl, nl,
 	printUrutan(Urutan, 1).
