@@ -4,136 +4,133 @@
 :- include('deck.pl').
 
 /* ===== AKSI UTAMA ===== */
-mainkanKartu(Idx) :-
-    giliran(Pemain), urutan_pemain(Urutan), h_ListIndexOf(Urutan, Pemain, IdPemain), h_ListLength(Urutan, NPemain), kartu_pemain(Pemain, Deck), h_ListLength(Deck, N),
-    0 =< Idx, Idx < N,
-    h_ListAtIndex(Deck, Idx, Kartu),
+mainkanKartu(Indeks) :-
+    giliran(Pemain), 
+    urutanPemain(Urutan),
+    kartuPemain(Pemain, DaftarKartu),
+    h_ListLength(DaftarKartu, JumlahKartu),
+    0 =< Indeks, Indeks < JumlahKartu,
+    h_ListAtIndex(DaftarKartu, Indeks, Kartu),
     % kartuMainValid(Kartu),
-    h_ListRemoveAtIndex(Deck, Idx, Deck2),
-    retract(kartu_pemain(Pemain,_)), asserta(kartu_pemain(Pemain,Deck2)),
-    format('~w memainkan kartu: ~w', [Pemain,Kartu]), /*formatCard(Kartu),*/ write('.'), nl,
-
+    h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
+    retract(kartu_pemain(Pemain, _)),
+    asserta(kartu_pemain(Pemain, DaftarKartuBaru)),
+    format('~w memainkan kartu: ', [Pemain]), 
+    h_FormatCard(Kartu), write('.'), nl,
     giliranSelanjutnya.
 
 ambilKartu :-
     giliran(Pemain),
-    kartu_pemain(Pemain, KartuSebelum),
-    discard_top(kartu(W, J)),
-
-    (J == drawTwo -> Jumlah = 2 ;
-     J == drawFour -> Jumlah = 4 ;
-     Jumlah = 1),
-
+    kartuPemain(Pemain, DaftarKartuLama),
+    discardTop(kartu(_, JenisDiscard)),
+    (   JenisDiscard == drawTwo     -> Jumlah = 2 ;
+        JenisDiscard == drawFour    -> Jumlah = 4 ;
+        Jumlah = 1  ),
     ambilSejumlahKartu(Jumlah, KartuBaru),
-    h_ListAppendList(KartuSebelum, KartuBaru, KartuSesudah),
-
-    retract(kartu_pemain(Pemain, KartuSebelum)),
-    asserta(kartu_pemain(Pemain, KartuSesudah)),
-
-    format('Kartu ~w telah diperbarui. Kartu sekarang: ~w~n', [Pemain, KartuSesudah]),
-
+    h_ListAppendList(DaftarKartuLama, KartuBaru, DaftarKartuBaru),
+    retract(kartu_pemain(Pemain, DaftarKartuLama)),
+    asserta(kartu_pemain(Pemain, DaftarKartuBaru)),
+    format('Kartu ~w telah diperbarui. Kartu sekarang: ~w~n', [Pemain, DaftarKartuBaru]),
     giliranSelanjutnya.
 
 ambilSejumlahKartu(0, []) :- !.
 ambilSejumlahKartu(Jumlah, [Kartu|Sisa]) :-
-    loadKartu(DekKartu),
+    loadKartu(DeckKartu),
     random(0, 54, IndeksPilih),
     h_ListGetElement(DekKartu, IndeksPilih, Kartu),
-    JumlahBaru is Jumlah - 1,
-    ambilSejumlahKartu(JumlahBaru, Sisa).
+    JumlahSisa is Jumlah - 1,
+    ambilSejumlahKartu(JumlahSisa, Sisa).
 
 /* ===== UNI & TANGKAP ===== */
 /* Helpers */
-add_uni_status(Pemain) :-
-		uni_status(List),
-	  (\+ h_ListIsMember(Pemain, List) ->
-		    retract(uni_status(_)),
-		    asserta(uni_status([Pemain|List]))
-	  ;
-	    	true
-	  ).
+tambahStatusUni(Pemain) :-
+	uniStatus(DaftarUni),
+	(   \+ h_ListIsMember(Pemain, DaftarUni) 
+    ->  retract(uniStatus(_)), 
+        asserta(uniStatus([Pemain|DaftarUni])) 
+    ;   true 
+    ).
 
-remove_uni_status(Pemain) :-
-		uni_status(List),
-	  ( h_ListIsMember(Pemain, List) ->
-		    h_ListIndexOf(List,Pemain,Index),
-		    h_ListRemoveAtIndex(List,Index,NewList),
-		    retract(uni_status(_)),
-		    asserta(uni_status(NewList))
-	  ;
-	    	true
-	  ).
+hapusStatusUni(Pemain) :-
+	uniStatus(DaftarUni),
+	(   h_ListIsMember(Pemain, DaftarUni) 
+    ->  h_ListIndexOf(DaftarUni,Pemain,Indeks),
+		h_ListRemoveAtIndex(DaftarUni, Indeks, DaftarUniBaru),
+		retract(uniStatus(_)),
+		asserta(uniStatus(DaftarUniBaru))
+	;   true
+	).
 
 /* Uni Valid */
-uni(Index):-
-		giliran(Pemain), kartu_pemain(Pemain,ListKartu),
-		urutan_pemain(UrutanPemain),
-		h_ListIndexOf(UrutanPemain, Pemain, IdPemain),
-		h_ListLength(UrutanPemain, NPemain),
-		h_ListLength(ListKartu,2),
-		h_ListGetElement(ListKartu,Index,Kartu), kartuMainValid(Kartu),
-
-		!,
-
-		h_ListRemoveAtIndex(ListKartu, Index, ListKartuNew),
-	  retract(kartu_pemain(Pemain, _)), asserta(kartu_pemain(Pemain, ListKartuNew)),
-	  retract(discard_top(_)), asserta(discard_top(Kartu)),
-	  add_uni_status(Pemain),
-
-	  format('~w memainkan kartu: ',[Pemain]), h_FormatCard(Kartu), write('.'), nl,
-	  format('~w menyerukan UNI!', [Pemain]), nl,
-	  arah_permainan(Arah), IdPemain2 is (IdPemain+NPemain+Arah) mod NPemain,
-	  h_ListAtIndex(UrutanPemain, IdPemain2, Pemain2),
-	  retract(giliran(_)), asserta(giliran(Pemain2)),
-	  format('Giliran ~w.', [Pemain2]).
+uni(Indeks):-
+	giliran(Pemain), 
+    kartuPemain(Pemain,DaftarKartu),
+	urutanPemain(UrutanPemain),
+	h_ListIndexOf(UrutanPemain, Pemain, IdPemain),
+	h_ListLength(UrutanPemain, JumlahPemain),
+	h_ListLength(DaftarKartu, 2),
+	h_ListGetElement(DaftarKartu, Indeks, Kartu), 
+    kartuMainValid(Kartu),
+	!,
+	h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
+	retract(kartu_pemain(Pemain, _)), 
+    asserta(kartu_pemain(Pemain, DaftarKartuBaru)),
+	retract(discard_top(_)), 
+    asserta(discard_top(Kartu)),
+	tambahStatusUni(Pemain),
+	format('~w memainkan kartu: ',[Pemain]), 
+    h_FormatCard(Kartu), write('.'), nl,
+	format('~w menyerukan UNI!', [Pemain]), nl,
+	arahPermainan(Arah), 
+    IdPemainBerikutnya is (IdPemain + JumlahPemain + Arah) mod JumlahPemain,
+	h_ListAtIndex(UrutanPemain, IdPemainBerikutnya, PemainBerikutnya),
+	retract(giliran(_)), 
+    asserta(giliran(PemainBerikutnya)),
+	format('Giliran ~w.', [PemainBerikutnya]).
 
 /* Uni Invalid */
 uni(_) :-
-	  giliran(Pemain), urutan_pemain(UrutanPemain),
+	  giliran(Pemain), 
+      urutanPemain(UrutanPemain),
 	  h_ListIndexOf(UrutanPemain, Pemain, IdPemain),
-	  h_ListLength(UrutanPemain, NPemain),
+	  h_ListLength(UrutanPemain, JumlahPemain),
 	  format('Perintah uni tidak valid! ~w mendapat 1 kartu penalti.', [Pemain]), nl,
-
-	  ambilSejumlahKartu(1, Penalti),
-	  kartu_pemain(Pemain, KartuLama),
-	  h_ListAppendList(KartuLama, Penalti, KartuBaru),
+	  ambilSejumlahKartu(1, KartuPenalti),
+	  kartuPemain(Pemain, DaftarKartuLama),
+	  h_ListAppendList(DaftarKartuLama, KartuPenalti, DaftarKartuBaru),
 	  retract(kartu_pemain(Pemain, _)),
-	  asserta(kartu_pemain(Pemain, KartuBaru)),
-
-	  arah_permainan(Arah), IdPemain2 is (IdPemain+NPemain+Arah) mod NPemain,
-	  h_ListAtIndex(UrutanPemain, IdPemain2, Pemain2),
-	  retract(giliran(_)), asserta(giliran(Pemain2)),
-	  format('Giliran ~w.', [Pemain2]).
+	  asserta(kartu_pemain(Pemain, DaftarKartuBaru)),
+	  arahPermainan(Arah), 
+      IdPemainBerikutnya is (IdPemain + JumlahPemain + Arah) mod JumlahPemain,
+	  h_ListAtIndex(UrutanPemain, IdPemainBerikutnya, PemainBerikutnya),
+	  retract(giliran(_)), 
+      asserta(giliran(PemainBerikutnya)),
+	  format('Giliran ~w.', [PemainBerikutnya]).
 
 /* Tangkap Valid */
 tangkap(Target) :-
     giliran(Pemanggil),
     Pemanggil \= Target,
-    kartu_pemain(Target, ListKartuTarget),
-    h_ListLength(ListKartuTarget, 1),
-    uni_status(ListUni),
-    \+ h_ListIsMember(Target, ListUni),
-
+    kartuPemain(Target, DaftarKartuTarget),
+    h_ListLength(DaftarKartuTarget, 1),
+    uniStatus(DaftarUni),
+    \+ h_ListIsMember(Target, DaftarUni),
     !,
-
     format('~w tertangkap tidak menyerukan UNI.', [Target]), nl,
     format('~w mendapatkan 2 kartu penalti.', [Target]), nl,
     format('Giliran ~w.', [Pemanggil]),
-
-    ambilSejumlahKartu(2, Penalti),
-    h_ListAppendList(ListKartuTarget, Penalti, ListKartuBaru),
-    retract(kartu_pemain(Target, _)),
-    asserta(kartu_pemain(Target, ListKartuBaru)).
+    ambilSejumlahKartu(2, KartuPenalti),
+    h_ListAppendList(DaftarKartuTarget, KartuPenalti, DaftarKartuBaru),
+    retract(kartuPemain(Target, _)),
+    asserta(kartuPemain(Target, DaftarKartuBaru)).
 
 /* Tangkap Invalid*/
 tangkap(Target) :-
     giliran(Pemanggil),
-
     write('Perintah tangkap tidak valid. '),
     format('~w mendapatkan 1 kartu penalti.', [Pemanggil]), nl,
-
-    ambilSejumlahKartu(1, Penalti),
-    kartu_pemain(Pemanggil, KartuLama),
-    h_ListAppendList(KartuLama, Penalti, KartuBaru),
-    retract(kartu_pemain(Pemanggil, _)),
-    asserta(kartu_pemain(Pemanggil, KartuBaru)).
+    ambilSejumlahKartu(1, KartuPenalti),
+    kartu_pemain(Pemanggil, DaftarKartuLama),
+    h_ListAppendList(DaftarKartuLama, KartuPenalti, DaftarKartuBaru),
+    retract(kartuPemain(Pemanggil, _)),
+    asserta(kartuPemain(Pemanggil, DaftarKartuBaru)).
