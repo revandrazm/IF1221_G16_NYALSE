@@ -1,6 +1,6 @@
 h_ListLength([], 0).
 h_ListLength([_|T], N) :-
-    h_ListLength(T, N2), 
+    h_ListLength(T, N2),
     N is N2+1.
 
 h_ListAppendElement([], Item, [Item]).
@@ -8,7 +8,7 @@ h_ListAppendElement([H|T], Item, [H|R]) :-
     h_ListAppendElement(T, Item, R).
 
 h_ListAppendList([], X, X).
-h_ListAppendList([H|T], X, [H|TResult]) :- 
+h_ListAppendList([H|T], X, [H|TResult]) :-
     h_ListAppendList(T, X, TResult).
 
 h_ListReverse(L, R) :- h_ListLength(L, N), h_ListReverse(L, R, N).
@@ -24,7 +24,7 @@ h_ListIndexOf([_|T], X, N) :-
     h_ListIndexOf(T, X, N2),
     N is N2+1.
 
-h_ListAtIndex(List, Idx, R) :- 
+h_ListAtIndex(List, Idx, R) :-
     h_ListIndexOf(List, R, Idx).
 
 h_ListInsertAtIndex(List, 0, X, [X|List]).
@@ -44,16 +44,10 @@ h_ListGetElement([_|T], I, Element) :-
     I > 0,
     I1 is I - 1,
     h_ListGetElement(T, I1, Element).
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c0e93a9 (refactor : memindahkan fungsi helper ke utils.pl)
 
 h_ListIsMember(X, [X|_]).
-h_ListIsMember(X, [_|T]) :- 
+h_ListIsMember(X, [_|T]) :-
     h_ListIsMember(X, T).
-<<<<<<< HEAD
-=======
->>>>>>> ea5845a (refactor : memindahkan helper pada deck.pl ke utils.pl dan fix beberapa bug)
-=======
->>>>>>> c0e93a9 (refactor : memindahkan fungsi helper ke utils.pl)
+
+h_FormatCard(kartu(Warna,Jenis) :-
+	format('~w-~w',[Warna,Jenis]).
