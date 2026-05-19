@@ -49,8 +49,9 @@ h_ListIsMember(X, [X|_]).
 h_ListIsMember(X, [_|T]) :-
     h_ListIsMember(X, T).
 
-h_FormatCard(kartu(Warna,Jenis) :-
+h_FormatCard(kartu(Warna,Jenis)) :-
 	format('~w-~w',[Warna,Jenis]).
+
 h_Shuffle([], []).
 h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
     h_ListLength(Awal, Panjang),
@@ -58,3 +59,19 @@ h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
     h_ListGetElement(Awal, Index, ElemenAcak),
     h_ListRemoveAtIndex(Awal, Index, AwalSisa),
     h_Shuffle(AwalSisa, SisaAcak).
+
+testInit :-
+    retractall(giliran(_)),
+    retractall(urutan_pemain(_)),
+    retractall(arah_permainan(_)),
+    retractall(kartu_pemain(_, _)),
+    retractall(discard_top(_)),
+
+    asserta(giliran(player1)),
+    asserta(urutan_pemain([player1, player2, player3])),
+    asserta(arah_permainan(kiri)),
+    asserta(kartu_pemain(player1, [])),
+    asserta(kartu_pemain(player2, [])),
+    asserta(kartu_pemain(player3, [])),
+    asserta(discard_top(kartu(merah, 5))).
+
