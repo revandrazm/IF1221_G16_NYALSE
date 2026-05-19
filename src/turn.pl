@@ -6,13 +6,13 @@ giliranSelanjutnya :-
     urutan_pemain(DaftarPemain),
     arah_permainan(Arah),
 
-    h_ListIndexOf(DaftarPemain, PemainSekarang, IndexLama),
+    h_ListIndexOf(DaftarPemain, PemainSekarang, IndeksLama),
     h_ListLength(DaftarPemain, JumlahPemain),
-    (Arah == kanan ->
-     IndexBaru is (IndexLama + 1) mod JumlahPemain ;
-     IndexBaru is (IndexLama - 1 + JumlahPemain) mod JumlahPemain),
+    (   Arah == kanan 
+    ->  IndeksBaru is (IndeksLama + 1) mod JumlahPemain 
+    ;   IndeksBaru is (IndeksLama - 1 + JumlahPemain) mod JumlahPemain),
 
-    h_ListGetElement(DaftarPemain, IndexBaru, PemainBerikutnya),
+    h_ListGetElement(DaftarPemain, IndeksBaru, PemainBerikutnya),
 
     retract(giliran(PemainSekarang)),
     asserta(giliran(PemainBerikutnya)),
