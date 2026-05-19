@@ -1,1 +1,6 @@
-urutan_pemain: [1,2,3,4,5]giliran:discard_top:warna_aktif:arah_permainan:status_UNI:
+urutan_pemain:[1,2,3,4,5,6].
+giliran:1.
+discard_top:merah-skip.
+warna_aktif:merah.
+arah_permainan:kanan.
+status_UNI:[3,4,6].
