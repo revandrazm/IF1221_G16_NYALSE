@@ -5,7 +5,7 @@ testInit :-
     retractall(arahPermainan(_)),
     retractall(kartuPemain(_, _)),
     retractall(discardTop(_)),
-    retractall(uni_status(_)),
+    retractall(uniStatus(_)),
 
     asserta(giliran(player1)),
     asserta(urutanPemain([player1, player2, player3])),
@@ -14,7 +14,7 @@ testInit :-
     asserta(kartuPemain(player2, [])),
     asserta(kartuPemain(player3, [])),
     asserta(discardTop(kartu(merah, 5))),
-    asserta(uni_status([])).
+    asserta(uniStatus([])).
 
 /* Specific Utils */
 h_FormatCard(kartu(Warna,Jenis)) :-
@@ -45,6 +45,7 @@ h_ListAppendList([H|T], X, [H|THasil]) :-
 h_ListReverse(L, R) :- 
     h_ListLength(L, N), 
     h_ListReverse(L, R, N).
+h_ListReverse([], [], 0) :- !.
 h_ListReverse(List, List, 1) :- !.
 h_ListReverse([H|T], R, N) :-
     N > 1,
@@ -58,7 +59,7 @@ h_ListIndexOf([_|T], X, N) :-
     N is N2+1.
 
 h_ListAtIndex(List, Indeks, R) :-
-    h_ListIndexOf(List, R, Indeks).
+    h_ListGetElement(List, R, Indeks).
 
 h_ListInsertAtIndex(List, 0, X, [X|List]) :- !.
 h_ListInsertAtIndex([H|T], Indeks, X, [H|R]) :-
@@ -69,13 +70,13 @@ h_ListInsertAtIndex([H|T], Indeks, X, [H|R]) :-
 h_ListRemoveAtIndex([_|T], 0, T) :- !.
 h_ListRemoveAtIndex([H|T], Indeks, [H|R]) :-
     Indeks > 0,
-    IndeksBerikutnya is Indeks,
+    IndeksBerikutnya is Indeks - 1,
     h_ListRemoveAtIndex(T, IndeksBerikutnya, R).
 
 h_ListGetElement([Elemen|_], 0, Elemen) :- !.
 h_ListGetElement([_|T], Indeks, Elemen) :-
     Indeks > 0,
-    IndeksBerikutnya is IIndeks - 1,
+    IndeksBerikutnya is Indeks - 1,
     h_ListGetElement(T, IndeksBerikutnya, Elemen).
 
 h_ListIsMember(X, [X|_]) :- !.

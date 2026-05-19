@@ -3,7 +3,7 @@
 :- include('player.pl').
 :- include('turn.pl').
 :- include('display.pl').
-:- include('actions.pl').
+:- include('action.pl').
 :- include('scoring.pl').
 :- dynamic(gameRunning/1).
 :- initialization(main).
@@ -11,6 +11,10 @@
 main :- startGame.
 
 startGame :-
+    retractall(gameRunning(_)),
+    retractall(deck(_)),
+    retractall(arahPermainan(_)),
+    retractall(uniStatus(_)),
     assertz(gameRunning(true)),
 
     write('*******************************************'), nl,
@@ -25,7 +29,7 @@ startGame :-
     initDiscard(SisaDeck, SisaDeckAkhir),
     
     assertz(deck(SisaDeckAkhir)),
-    assertz(arah_permainan(kanan)),
+    assertz(arahPermainan(kanan)),
     assertz(uniStatus([])),
 
     write('Set up selesai! Permainan dimulai!'), nl.
