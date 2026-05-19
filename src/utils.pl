@@ -66,6 +66,7 @@ testInit :-
     retractall(arah_permainan(_)),
     retractall(kartu_pemain(_, _)),
     retractall(discard_top(_)),
+    retractall(deck(_)),
 
     asserta(giliran(player1)),
     asserta(urutan_pemain([player1, player2, player3])),
@@ -73,5 +74,8 @@ testInit :-
     asserta(kartu_pemain(player1, [])),
     asserta(kartu_pemain(player2, [])),
     asserta(kartu_pemain(player3, [])),
-    asserta(discard_top(kartu(merah, 5))).
+    asserta(discard_top(kartu(merah, 5))),
+
+    loadKartu(Dek),
+    asserta(deck(Dek)).
 
