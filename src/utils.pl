@@ -1,5 +1,3 @@
-:- include('state.pl').
-
 /* Initialize game State */
 testInit :-
     retractall(giliran(_)),
@@ -27,7 +25,6 @@ h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
     h_ListGetElement(Awal, Index, ElemenAcak),
     h_ListRemoveAtIndex(Awal, Index, AwalSisa),
     h_Shuffle(AwalSisa, SisaAcak).
-
 
 /* Basic Utils */
 h_ListLength([], 0).

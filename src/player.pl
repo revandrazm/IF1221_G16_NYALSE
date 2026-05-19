@@ -1,4 +1,6 @@
 :- include('utils.pl').
+:- include('state.pl').
+:- include('deck.pl').
 
 inisialisasiPemain(N, ListPemain) :-
     inputNama(N, [], ListPemainUtuh),

@@ -1,3 +1,6 @@
+:- include('state.pl').
+:- include('player.pl').
+
 giliranSelanjutnya :-
     giliran(PemainSekarang),
     urutan_pemain(DaftarPemain),
