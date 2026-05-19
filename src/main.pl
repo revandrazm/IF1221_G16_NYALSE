@@ -16,7 +16,7 @@ startGame :-
     inputJumlahPemain(N),
     inisialisasiPemain(N, ListPemain),
     loadKartu(Deck),
-    shuffle(Deck, DeckAcak),
+    h_Shuffle(Deck, DeckAcak),
     bagiKartu(ListPemain, DeckAcak, SisaDeck),
     initDiscard(SisaDeck, SisaDeckAkhir),
     
@@ -33,3 +33,14 @@ inputJumlahPemain(N):-
         write('Jumlah pemain tidak valid! Masukkan jumlah pemain lagi.'), nl,
         inputJumlahPemain(N)
     ).
+
+endgame :-
+    hitungPoinHelper([], 0);
+    hitungPoinHelper([kartu(W,J)|T], TotalPoin) :-
+        nilaiKartu(J, Nilai),
+        hitungPoinHelper(T, PoinSekarang),
+        TotalPoin is PoinSekarang + Nilai.
+    hitungPoinPemain(Pemain, Poin) :-
+        kartu_pemain(Pemain, SisaKartu),
+        hitungPoinHelper(SisaKartu, Poin).
+    
