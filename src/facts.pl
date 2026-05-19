@@ -27,3 +27,4 @@ nilaiKartu(reverse, 10).
 nilaiKartu(draw_two, 10).
 nilaiKartu(wild, 20).
 nilaiKartu(wild_draw_four, 20).
+kartuHitam([kartu(hitam, normal), kartu(hitam, drawFour)]).
