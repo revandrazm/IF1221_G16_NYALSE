@@ -39,13 +39,20 @@ ambilKartu :-
     format('Kartu ~w telah diperbarui. Kartu sekarang: ~w~n', [Pemain, DaftarKartuBaru]),
     giliranSelanjutnya.
 
-ambilSejumlahKartu(0, []) :- !.
-ambilSejumlahKartu(Jumlah, [Kartu|Sisa]) :-
-    loadKartu(DeckKartu),
-    random(0, 54, IndeksPilih),
-    h_ListGetElement(DeckKartu, IndeksPilih, Kartu),
-    JumlahSisa is Jumlah - 1,
-    ambilSejumlahKartu(JumlahSisa, Sisa).
+ambilSejumlahKartu(JumlahKartu, DaftarKartuTerpilih) :-
+    deck(DeckAwal),
+    prosesAmbil(JumlahKartu, DeckAwal, DeckSisa, DaftarKartuTerpilih),
+    retract(deck(DeckAwal)),
+    asserta(deck(DeckSisa)).
+
+prosesAmbil(0, Deck, Deck, []) :- !.
+prosesAmbil(JumlahKartu, Deck, DeckAkhir, [Kartu|Sisa]) :-
+    h_ListLength(Deck, Panjang),
+    random(0, Panjang, IndeksPilih),
+    h_ListGetElement(Deck, IndeksPilih, Kartu),
+    h_ListRemoveAtIndex(Deck, IndeksPilih, DeckSisa),
+    JumlahSisa is JumlahKartu - 1,
+    prosesAmbil(JumlahSisa, DeckSisa, DeckAkhir, Sisa).
 
 /* ===== UNI & TANGKAP ===== */
 /* Helpers */

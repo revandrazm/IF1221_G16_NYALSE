@@ -6,6 +6,8 @@ testInit :-
     retractall(kartuPemain(_, _)),
     retractall(discardTop(_)),
     retractall(uniStatus(_)),
+    retractall(deck(_)),
+    loadKartu(Deck),
 
     asserta(giliran(player1)),
     asserta(urutanPemain([player1, player2, player3])),
@@ -15,6 +17,8 @@ testInit :-
     asserta(kartuPemain(player3, [])),
     asserta(discardTop(kartu(merah, 5))),
     asserta(uniStatus([])).
+    asserta(uni_status([])),
+    asserta(deck(Deck)).
 
 /* Specific Utils */
 h_FormatCard(kartu(Warna,Jenis)) :-
