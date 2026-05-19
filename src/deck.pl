@@ -24,7 +24,7 @@ bagiKartu([Pemain|SisaPemain], Deck, SisaDeck):-
     ambilKartu(KartuPemain, 7, Deck, DeckSementara),
     assertz(kartu_pemain(Pemain, KartuPemain)),
     bagiKartu(SisaPemain, DeckSementara, SisaDeck).
-    
+
 ambilKartu([], 0, Deck, Deck) :- !.
 ambilKartu([H|TAmbil], N, [H|TDeck], SisaDeck) :-
     N > 0,
@@ -45,4 +45,3 @@ initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
 
 printKartu :-
 	loadKartu(X), write(X).
-
