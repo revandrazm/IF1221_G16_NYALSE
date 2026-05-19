@@ -30,17 +30,22 @@ ambilKartu :-
     retract(kartu_pemain(Pemain, KartuSebelum)),
     asserta(kartu_pemain(Pemain, KartuSesudah)),
 
-    format('Kartu ~w telah diperbarui. Kartu sekarang: ~w~n', [Pemain, KartuSesudah]),
+    format('Kartu ~w telah diperbarui. Kartu sekarang: ~w~n', [Pemain, KartuSesudah]).
 
-    giliranSelanjutnya.
+ambilSejumlahKartu(Jumlah, ListKartuTerpilih) :-
+    deck(DekAwal),
+    prosesAmbil(Jumlah, DekAwal, DekSisa, ListKartuTerpilih),
+    retract(deck(DekAwal)),
+    asserta(deck(DekSisa)).
 
-ambilSejumlahKartu(0, []) :- !.
-ambilSejumlahKartu(Jumlah, [Kartu|Sisa]) :-
-    loadKartu(DekKartu),
-    random(0, 54, IndeksPilih),
-    h_ListGetElement(DekKartu, IndeksPilih, Kartu),
+prosesAmbil(0, Dek, Dek, []) :- !.
+prosesAmbil(Jumlah, Dek, DekAkhir, [Kartu|Sisa]) :-
+    h_ListLength(Dek, Length),
+    random(0, Length, IndeksPilih),
+    h_ListGetElement(Dek, IndeksPilih, Kartu),
+    h_ListRemoveAtIndex(Dek, IndeksPilih, DekSisa),
     JumlahBaru is Jumlah - 1,
-    ambilSejumlahKartu(JumlahBaru, Sisa).
+    prosesAmbil(JumlahBaru, DekSisa, DekAkhir, Sisa).
 
 /* ===== UNI & TANGKAP ===== */
 /* Helpers */
