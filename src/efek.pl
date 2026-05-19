@@ -19,10 +19,12 @@ aplikasiEfek(reverse) :-
     giliranSelanjutnya, !.
 
 aplikasiEfek(drawTwo) :-
+    giliranSelanjutnya,
     ambilKartu,
     giliranSelanjutnya, !.
 
 aplikasiEfek(wildDrawFour) :-
+    giliranSelanjutnya,
     ambilKartu,
     giliranSelanjutnya, !.
 
