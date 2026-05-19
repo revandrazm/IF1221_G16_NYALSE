@@ -67,5 +67,5 @@ lihatKartu :-
 cekInfo :-
 	discard_top(Top), urutan_pemain(Urutan),
 	write('Kartu discard top: '), formatCard(Top), nl, nl,
-	write('Urutan pemain: '), formatUrutan(Urutan), nl, nl.
+	write('Urutan pemain: '), formatUrutan(Urutan), nl, nl,
 	printUrutan(Urutan, 1).

@@ -19,20 +19,12 @@ loadKartu(ListKartu):-
     kombinasiSemuaWarna(ListWarna, ListJenis, ListKartuWarna),
     h_ListAppendList(ListKartuHitam, ListKartuWarna, ListKartu).
 
-shuffle([], []).
-shuffle(Awal, [ElemenAcak|SisaAcak]) :-
-    h_ListLength(Awal, Panjang),
-    random(0, Panjang, Index),
-    h_ListGetElement(Awal, Index, ElemenAcak),
-    h_ListRemoveAtIndex(Awal, Index, AwalSisa),
-    shuffle(AwalSisa, SisaAcak).
-
 bagiKartu([], Deck, Deck).
 bagiKartu([Pemain|SisaPemain], Deck, SisaDeck):-
     ambilKartu(KartuPemain, 7, Deck, DeckSementara),
     assertz(kartu_pemain(Pemain, KartuPemain)),
     bagiKartu(SisaPemain, DeckSementara, SisaDeck).
-    
+
 ambilKartu([], 0, Deck, Deck) :- !.
 ambilKartu([H|TAmbil], N, [H|TDeck], SisaDeck) :-
     N > 0,
@@ -53,4 +45,3 @@ initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
 
 printKartu :-
 	loadKartu(X), write(X).
-
