@@ -78,7 +78,7 @@ uni(Index):-
 
 	  format('~w memainkan kartu: ',[Pemain]), h_FormatCard(Kartu), write('.'), nl,
 	  format('~w menyerukan UNI!', [Pemain]), nl,
-	  giliranSelanjutnya.
+	  giliranSelanjutnya,!.
 
 /* Uni Invalid */
 uni(_) :-
@@ -91,7 +91,7 @@ uni(_) :-
 	  retract(kartu_pemain(Pemain, _)),
 	  asserta(kartu_pemain(Pemain, KartuBaru)),
 
-	  giliranSelanjutnya.
+	  giliranSelanjutnya, !.
 
 /* Tangkap Valid */
 tangkap(Target) :-
@@ -111,7 +111,7 @@ tangkap(Target) :-
     ambilSejumlahKartu(2, Penalti),
     h_ListAppendList(ListKartuTarget, Penalti, ListKartuBaru),
     retract(kartu_pemain(Target, _)),
-    asserta(kartu_pemain(Target, ListKartuBaru)).
+    asserta(kartu_pemain(Target, ListKartuBaru)),!.
 
 /* Tangkap Invalid*/
 tangkap(Target) :-
@@ -124,4 +124,4 @@ tangkap(Target) :-
     kartu_pemain(Pemanggil, KartuLama),
     h_ListAppendList(KartuLama, Penalti, KartuBaru),
     retract(kartu_pemain(Pemanggil, _)),
-    asserta(kartu_pemain(Pemanggil, KartuBaru)).
+    asserta(kartu_pemain(Pemanggil, KartuBaru)),!.

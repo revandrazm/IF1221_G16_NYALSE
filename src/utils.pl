@@ -5,14 +5,16 @@ testInit :-
     retractall(arah_permainan(_)),
     retractall(kartu_pemain(_, _)),
     retractall(discard_top(_)),
+    retractall(uni_status(_)),
 
     asserta(giliran(player1)),
     asserta(urutan_pemain([player1, player2, player3])),
     asserta(arah_permainan(kiri)),
-    asserta(kartu_pemain(player1, [])),
+    asserta(kartu_pemain(player1, [kartu(merah,4),kartu(merah,6)])),
     asserta(kartu_pemain(player2, [])),
     asserta(kartu_pemain(player3, [])),
-    asserta(discard_top(kartu(merah, 5))).
+    asserta(discard_top(kartu(merah, 5))),
+    asserta(uni_status([])).
 
 /* Specific Utils */
 h_FormatCard(kartu(Warna,Jenis)) :-
