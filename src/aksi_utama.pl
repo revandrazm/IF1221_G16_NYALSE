@@ -10,6 +10,7 @@ mainkanKartu(Idx) :-
     h_ListRemoveAtIndex(Deck, Idx, Deck2),
     retract(kartuPemain(Pemain,_)), asserta(kartuPemain(Pemain,Deck2)),
     format('~w memainkan kartu: ~w', [Pemain,Kartu]), /*formatCard(Kartu),*/ write('.'), nl,
+
     giliranSelanjutnya.
 
 kartuMainValid(kartu(Warna, Jenis)) :-
@@ -57,6 +58,6 @@ giliranSelanjutnya :-
     h_ListGetElement(DaftarPemain, IndexBaru, PemainBerikutnya),
 
     retract(giliran(PemainSekarang)),
-    asserta(giliran(PemainBerikutnya))
+    asserta(giliran(PemainBerikutnya)),
 
     format('Giliran ~w.', [PemainBerikutnya]).
