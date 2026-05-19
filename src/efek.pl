@@ -4,6 +4,7 @@
 :- include('action.pl').
 
 aplikasiEfek(skip) :-
+    giliranSelanjutnya,
     giliranSelanjutnya, !.
 
 aplikasiEfek(reverse) :-
