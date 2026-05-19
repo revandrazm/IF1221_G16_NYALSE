@@ -2,7 +2,8 @@
 
 inisialisasiPemain(N, ListPemain) :-
     inputNama(N, [], ListPemainUtuh),
-    ListPemain = ListPemainUtuh,
+    h_Shuffle(ListPemainUtuh, ListPemainAcak),
+    ListPemain = ListPemainAcak,
     assertz(urutan_pemain(ListPemain)),
     [FirstPlayer|_] = ListPemain,
     assertz(giliran(FirstPlayer)).

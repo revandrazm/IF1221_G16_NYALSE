@@ -51,3 +51,10 @@ h_ListIsMember(X, [_|T]) :-
 
 h_FormatCard(kartu(Warna,Jenis) :-
 	format('~w-~w',[Warna,Jenis]).
+h_Shuffle([], []).
+h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
+    h_ListLength(Awal, Panjang),
+    random(0, Panjang, Index),
+    h_ListGetElement(Awal, Index, ElemenAcak),
+    h_ListRemoveAtIndex(Awal, Index, AwalSisa),
+    h_Shuffle(AwalSisa, SisaAcak).
