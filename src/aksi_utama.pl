@@ -10,9 +10,7 @@ mainkanKartu(Idx) :-
     h_ListRemoveAtIndex(Deck, Idx, Deck2),
     retract(kartuPemain(Pemain,_)), asserta(kartuPemain(Pemain,Deck2)),
     format('~w memainkan kartu: ~w', [Pemain,Kartu]), /*formatCard(Kartu),*/ write('.'), nl,
-    arah(Arah), IdPemain2 is (IdPemain+NPemain+Arah) mod NPemain,
-    h_ListAtIndex(Urutan, IdPemain2, Pemain2), retract(giliran(_)), asserta(giliran(Pemain2)),
-    format('Giliran ~w.', [Pemain2]), !.
+    giliranSelanjutnya.
 
 kartuMainValid(kartu(Warna, Jenis)) :-
     discardTop(kartu(Warna2,Jenis2)),
@@ -59,4 +57,6 @@ giliranSelanjutnya :-
     h_ListGetElement(DaftarPemain, IndexBaru, PemainBerikutnya),
 
     retract(giliran(PemainSekarang)),
-    asserta(giliran(PemainBerikutnya)).
+    asserta(giliran(PemainBerikutnya))
+
+    format('Giliran ~w.', [PemainBerikutnya]).
