@@ -5,13 +5,16 @@
 
 /* ===== AKSI UTAMA ===== */
 mainkanKartu(Idx) :-
-    giliran(Pemain), urutan_pemain(Urutan), h_ListIndexOf(Urutan, Pemain, IdPemain), h_ListLength(Urutan, NPemain), kartu_pemain(Pemain, Deck), h_ListLength(Deck, N),
+    giliran(Pemain), urutan_pemain(Urutan), h_ListIndexOf(Urutan, Pemain, IdPemain), h_ListLength(Urutan, NPemain), kartu_pemain(Pemain, Deck), h_ListLength(Deck, N), efek_aktif(Efek),
     0 =< Idx, Idx < N,
     h_ListAtIndex(Deck, Idx, Kartu),
     % kartuMainValid(Kartu),
     h_ListRemoveAtIndex(Deck, Idx, Deck2),
     retract(kartu_pemain(Pemain,_)), asserta(kartu_pemain(Pemain,Deck2)),
     format('~w memainkan kartu: ~w', [Pemain,Kartu]), /*formatCard(Kartu),*/ write('.'), nl,
+
+    retract(efek_aktif(Efek)),
+
 
     giliranSelanjutnya.
 
