@@ -1,8 +1,3 @@
-:- include('state.pl').
-:- include('deck.pl').
-:- include('player.pl').
-:- include('turn.pl').
-:- include('display.pl').
 :- include('action.pl').
 :- include('scoring.pl').
 :- dynamic(gameRunning/1).
@@ -15,6 +10,11 @@ startGame :-
     retractall(deck(_)),
     retractall(arahPermainan(_)),
     retractall(uniStatus(_)),
+    retractall(kartuPemain(_, _)),
+    retractall(giliran(_)),
+    retractall(urutanPemain(_)),
+    retractall(discardTop(_)),
+    retractall(warnaAktif(_)),
     assertz(gameRunning(true)),
 
     write('*******************************************'), nl,
