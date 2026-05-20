@@ -4,20 +4,6 @@
 :- include('deck.pl').
 
 /* ===== AKSI UTAMA ===== */
-<<<<<<< HEAD
-mainkanKartu(Idx) :-
-    giliran(Pemain), urutan_pemain(Urutan), h_ListIndexOf(Urutan, Pemain, IdPemain), h_ListLength(Urutan, NPemain), kartu_pemain(Pemain, Deck), h_ListLength(Deck, N), efek_aktif(Efek),
-    0 =< Idx, Idx < N,
-    h_ListAtIndex(Deck, Idx, Kartu),
-    % kartuMainValid(Kartu),
-    h_ListRemoveAtIndex(Deck, Idx, Deck2),
-    retract(kartu_pemain(Pemain,_)), asserta(kartu_pemain(Pemain,Deck2)),
-    format('~w memainkan kartu: ~w', [Pemain,Kartu]), /*formatCard(Kartu),*/ write('.'), nl,
-
-    retract(efek_aktif(Efek)),
-
-
-=======
 mainkanKartu(Indeks) :-
     giliran(Pemain), 
     kartuPemain(Pemain, DaftarKartu),
@@ -36,7 +22,6 @@ mainkanKartu(Indeks) :-
     (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
     format('~w memainkan kartu: ', [Pemain]), 
     h_FormatCard(Kartu), write('.'), nl,
->>>>>>> bac3299630d037fd571eb9f9549bc40893737a66
     giliranSelanjutnya.
 
 ambilKartu :-
