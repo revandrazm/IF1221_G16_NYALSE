@@ -13,7 +13,7 @@ testInit :-
     asserta(giliran(player1)),
     asserta(urutanPemain([player1, player2, player3])),
     asserta(arahPermainan(kiri)),
-    asserta(kartuPemain(player1, [])),
+    asserta(kartuPemain(player1, [kartu(merah,4),kartu(merah,6)])),
     asserta(kartuPemain(player2, [])),
     asserta(kartuPemain(player3, [])),
     asserta(discardTop(kartu(merah, 5))),
@@ -38,11 +38,11 @@ h_ListLength([_|T], N) :-
     h_ListLength(T, N2),
     N is N2+1.
 
-h_ListAppendElement([], Elemen, [Elemen]).
+h_ListAppendElement([], Elemen, [Elemen]) :- !.
 h_ListAppendElement([H|T], Elemen, [H|R]) :-
     h_ListAppendElement(T, Elemen, R).
 
-h_ListAppendList([], X, X).
+h_ListAppendList([], X, X) :- !.
 h_ListAppendList([H|T], X, [H|THasil]) :-
     h_ListAppendList(T, X, THasil).
 
@@ -65,19 +65,19 @@ h_ListIndexOf([_|T], X, N) :-
 h_ListAtIndex(List, Indeks, R) :-
     h_ListGetElement(List, Indeks, R).
 
-h_ListInsertAtIndex(List, 0, X, [X|List]).
+h_ListInsertAtIndex(List, 0, X, [X|List]) :- !.
 h_ListInsertAtIndex([H|T], Indeks, X, [H|R]) :-
     Indeks > 0,
     IndeksBerikutnya is Indeks - 1,
     h_ListInsertAtIndex(T, IndeksBerikutnya, X, R).
 
-h_ListRemoveAtIndex([_|T], 0, T).
+h_ListRemoveAtIndex([_|T], 0, T) :- !.
 h_ListRemoveAtIndex([H|T], Indeks, [H|R]) :-
     Indeks > 0,
     IndeksBerikutnya is Indeks - 1,
     h_ListRemoveAtIndex(T, IndeksBerikutnya, R).
 
-h_ListGetElement([Elemen|_], 0, Elemen).
+h_ListGetElement([Elemen|_], 0, Elemen) :- !.
 h_ListGetElement([_|T], Indeks, Elemen) :-
     Indeks > 0,
     IndeksBerikutnya is Indeks - 1,

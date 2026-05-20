@@ -85,12 +85,7 @@ uni(Indeks):-
 	format('~w memainkan kartu: ',[Pemain]), 
     h_FormatCard(Kartu), write('.'), nl,
 	format('~w menyerukan UNI!', [Pemain]), nl,
-	arahPermainan(Arah), 
-    IdPemainBerikutnya is (IdPemain + JumlahPemain + Arah) mod JumlahPemain,
-	h_ListAtIndex(UrutanPemain, IdPemainBerikutnya, PemainBerikutnya),
-	retract(giliran(_)), 
-    asserta(giliran(PemainBerikutnya)),
-	format('Giliran ~w.', [PemainBerikutnya]).
+	giliranSelanjutnya.
 
 /* Uni Invalid */
 uni(_) :-
