@@ -1,5 +1,3 @@
-:- include('utils.pl').
-:- include('state.pl').
 :- include('deck.pl').
 
 /* Inisialisasi pemain awal */

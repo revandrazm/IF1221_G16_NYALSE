@@ -1,5 +1,3 @@
-:- include('state.pl').
-:- include('utils.pl').
 :- include('deck.pl').
 
 /* Daftar Aksi yang Tersedia */
