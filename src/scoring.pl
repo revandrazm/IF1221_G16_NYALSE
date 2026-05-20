@@ -1,7 +1,4 @@
-:- include('state.pl').
-:- include('deck.pl').
 :- include('player.pl').
-:- include('utils.pl').
 :- include('display.pl').
 
 /* Perhitungan Poin */

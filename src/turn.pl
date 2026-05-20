@@ -1,6 +1,4 @@
-:- include('state.pl').
 :- include('player.pl').
-:- include('utils.pl').
 
 giliranSelanjutnya :-
     giliran(PemainSekarang),

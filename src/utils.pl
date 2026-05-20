@@ -1,7 +1,4 @@
 /* Initialize game State */
-:- include('deck.pl').
-:- include('state.pl').
-
 testInit :-
     retractall(giliran(_)),
     retractall(urutanPemain(_)),

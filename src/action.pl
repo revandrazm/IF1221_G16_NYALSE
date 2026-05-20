@@ -1,7 +1,4 @@
-:- include('state.pl').
 :- include('turn.pl').
-:- include('utils.pl').
-:- include('deck.pl').
 
 /* ===== AKSI UTAMA ===== */
 mainkanKartu(Indeks) :-
