@@ -1,4 +1,7 @@
 /* Initialize game State */
+:- include('deck.pl').
+:- include('state.pl').
+
 testInit :-
     retractall(giliran(_)),
     retractall(urutanPemain(_)),
@@ -7,8 +10,9 @@ testInit :-
     retractall(discardTop(_)),
     retractall(uniStatus(_)),
     retractall(deck(_)),
+    
     loadKartu(Deck),
-
+    h_Shuffle(Deck, DeckAcak),
     asserta(giliran(player1)),
     asserta(urutanPemain([player1, player2, player3])),
     asserta(arahPermainan(kiri)),
@@ -16,9 +20,8 @@ testInit :-
     asserta(kartuPemain(player2, [])),
     asserta(kartuPemain(player3, [])),
     asserta(discardTop(kartu(merah, 5))),
-    asserta(uniStatus([])).
-    asserta(uni_status([])),
-    asserta(deck(Deck)).
+    asserta(uniStatus([])),
+    asserta(deck(DeckAcak)).
 
 /* Specific Utils */
 h_FormatCard(kartu(Warna,Jenis)) :-
@@ -63,7 +66,7 @@ h_ListIndexOf([_|T], X, N) :-
     N is N2+1.
 
 h_ListAtIndex(List, Indeks, R) :-
-    h_ListGetElement(List, R, Indeks).
+    h_ListGetElement(List, Indeks, R).
 
 h_ListInsertAtIndex(List, 0, X, [X|List]).
 h_ListInsertAtIndex([H|T], Indeks, X, [H|R]) :-

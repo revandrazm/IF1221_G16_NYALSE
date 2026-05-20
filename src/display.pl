@@ -3,7 +3,8 @@
 :- include('deck.pl').
 
 /* Daftar Aksi yang Tersedia */
-daftarAksiUtama([mainkanKartu(indeksKartu), ambilKartu, tantang, uni(indeksKartu), tangkap(namaPemain)]).
+daftarAksiUtama([mainkanKartu(indeksKartu), ambilKartu, 
+                 tantang, uni(indeksKartu), tangkap(namaPemain)]).
 
 daftarAksiPendukung([lihatCommand, lihatKartu, cekInfo]).
 
