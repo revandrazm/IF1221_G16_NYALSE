@@ -30,11 +30,12 @@ nilaiKartu(wildDrawFour, 20).
 
 /* Validitas Kartu */
 kartuMainValid(kartu(Warna, Jenis)) :-
-    discardTop(kartu(WarnaDiscard, JenisDiscard)),
-    ( (Warna = WarnaDiscard,Warna \= hitam)
-    ; (Jenis = JenisDiscard,Jenis \= wild)
-    ; (Jenis = wild,JenisDiscard \= wild)
-    ; Jenis = wildDrawFour
+    discardTop(kartu(_, JenisDiscard)),
+    warnaAktif(WarnaAktif)
+    ( (Warna = WarnaAktif, Warna \= hitam)
+    ; (Jenis = JenisDiscard, Jenis \= wild, Jenis \= wildDrawFour)
+    ; (Jenis = wild, JenisDiscard \= wild)
+    ; (Jenis = wildDrawFour, JenisDiscard \= wildDrawFour)
     ).
 
 /* Formatting Kartu */
