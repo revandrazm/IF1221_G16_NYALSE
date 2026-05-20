@@ -31,7 +31,7 @@ nilaiKartu(wildDrawFour, 20).
 /* Validitas Kartu */
 kartuMainValid(kartu(Warna, Jenis)) :-
     discardTop(kartu(_, JenisDiscard)),
-    warnaAktif(WarnaAktif)
+    warnaAktif(WarnaAktif),
     ( (Warna = WarnaAktif, Warna \= hitam)
     ; (Jenis = JenisDiscard, Jenis \= wild, Jenis \= wildDrawFour)
     ; (Jenis = wild, JenisDiscard \= wild)
