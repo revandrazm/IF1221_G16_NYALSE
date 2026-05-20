@@ -2,6 +2,7 @@
 :- include('state.pl').
 :- include('deck.pl').
 
+/* Inisialisasi pemain awal */
 inisialisasiPemain(JumlahPemain, DaftarPemain) :-
     inputNama(JumlahPemain, [], DaftarPemainUtuh),
     h_Shuffle(DaftarPemainUtuh, DaftarPemainAcak),
@@ -10,6 +11,7 @@ inisialisasiPemain(JumlahPemain, DaftarPemain) :-
     [PemainPertama|_] = DaftarPemain,
     assertz(giliran(PemainPertama)).
 
+/* Input nama pemain */
 inputNama(0, Akumulasi, Akumulasi) :- !.
 inputNama(JumlahPemain, Akumulasi, Hasil) :-
     JumlahPemain > 0,
@@ -23,6 +25,7 @@ inputNama(JumlahPemain, Akumulasi, Hasil) :-
         inputNama(JumlahPemainSisa, AkumulasiBerikutnya, Hasil)
     ).
 
+/* Pembagian kartu kepada pemain */
 bagiKartu([], Deck, Deck).
 bagiKartu([Pemain|SisaPemain], Deck, SisaDeck):-
     ambilKartuAwal(KartuPemain, 7, Deck, DeckSementara),
