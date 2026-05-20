@@ -3,9 +3,15 @@
 
 /* Daftar Kartu Valid*/
 warnaDasar([merah, kuning, hijau, biru]).
-jenisKartu([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, skip, reverse, drawTwo]).
-kartuHitam([kartu(hitam, wild), kartu(hitam, wildDrawFour)]).
+jenisKartu([0, 1, 1, 2, 2, 3, 3, 4, 4, 
+            5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 
+            skip, skip, reverse, reverse, drawTwo, drawTwo]).
+kartuHitam([kartu(hitam, wild), kartu(hitam, wild), 
+            kartu(hitam, wild), kartu(hitam, wild), 
+            kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour), 
+            kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour)]).
 
+/* Nilai Kartu */
 nilaiKartu(0, 0).
 nilaiKartu(1, 1).
 nilaiKartu(2, 2).
@@ -46,7 +52,7 @@ kombinasiSemuaWarna([Warna|SisaWarna], Jenis, HasilAkhir) :-
     kombinasiSemuaWarna(SisaWarna, Jenis, HasilSementara),
     h_ListAppendList(HasilSementara, HasilSatuWarna, HasilAkhir).
 
-% Convert fakta kartu ke list
+/* Mengubah fakta kartu ke list */
 loadKartu(DaftarKartu):-
     warnaDasar(DaftarWarna),
     jenisKartu(DaftarJenis),
@@ -54,6 +60,7 @@ loadKartu(DaftarKartu):-
     kombinasiSemuaWarna(DaftarWarna, DaftarJenis, DaftarKartuWarna),
     h_ListAppendList(DaftarKartuHitam, DaftarKartuWarna, DaftarKartu).
 
+/* Menginisiasi kartu discard awal */
 initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
     Warna \= hitam, !,
     SisaAkhir = Sisa,

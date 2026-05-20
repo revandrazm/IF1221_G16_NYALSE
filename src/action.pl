@@ -46,13 +46,10 @@ ambilSejumlahKartu(JumlahKartu, DaftarKartuTerpilih) :-
     asserta(deck(DeckSisa)).
 
 prosesAmbil(0, Deck, Deck, []) :- !.
-prosesAmbil(JumlahKartu, Deck, DeckAkhir, [Kartu|Sisa]) :-
-    h_ListLength(Deck, Panjang),
-    random(0, Panjang, IndeksPilih),
-    h_ListGetElement(Deck, IndeksPilih, Kartu),
-    h_ListRemoveAtIndex(Deck, IndeksPilih, DeckSisa),
+prosesAmbil(JumlahKartu, [KartuTeratas|SisaDeckTersedia], DeckAkhir, [KartuTeratas|SisaAmbilan]) :-
+    JumlahKartu > 0,
     JumlahSisa is JumlahKartu - 1,
-    prosesAmbil(JumlahSisa, DeckSisa, DeckAkhir, Sisa).
+    prosesAmbil(JumlahSisa, SisaDeckTersedia, DeckAkhir, SisaAmbilan).
 
 /* ===== UNI & TANGKAP ===== */
 /* Helpers */
@@ -119,8 +116,7 @@ tangkap(Target) :-
     ambilSejumlahKartu(2, KartuPenalti),
     h_ListAppendList(DaftarKartuTarget, KartuPenalti, DaftarKartuBaru),
     retract(kartuPemain(Target, _)),
-    asserta(kartuPemain(Target, DaftarKartuBaru)),
-    giliranSelanjutnya.
+    asserta(kartuPemain(Target, DaftarKartuBaru)).
 
 /* Tangkap Invalid*/
 tangkap(_) :-
@@ -131,5 +127,4 @@ tangkap(_) :-
     kartuPemain(Pemanggil, DaftarKartuLama),
     h_ListAppendList(DaftarKartuLama, KartuPenalti, DaftarKartuBaru),
     retract(kartuPemain(Pemanggil, _)),
-    asserta(kartuPemain(Pemanggil, DaftarKartuBaru)),
-    giliranSelanjutnya, !.
+    asserta(kartuPemain(Pemanggil, DaftarKartuBaru)).
