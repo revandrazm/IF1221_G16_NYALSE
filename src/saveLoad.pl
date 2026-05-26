@@ -20,12 +20,12 @@ kartuPemain('AB', [kartu(1,2)]).
 saveGame :-
   write('Masukkan nama file penyimpanan: '), read(X), nl,
   open(X, write, Stream),
-  urutanPemain(Urutan), format(Stream, 'urutan_pemain:\'~w\'.~n', [Urutan]),
-  giliran(Giliran), format(Stream, 'giliran:\'~w\'.~n', [Giliran]),
+  urutanPemain(Urutan), format(Stream, 'urutan_pemain:~q.~n', [Urutan]),
+  giliran(Giliran), format(Stream, 'giliran:~q.~n', [Giliran]),
   discard_top(kartu(Warna,Jenis)), format(Stream, 'discard_top:~w-~w.~n', [Warna, Jenis]),
   format(Stream, 'warna_aktif:~w.~n', [Warna]),
-  arah_permainan(Arah), format(Stream, 'arah_permainan:~w.~n', [Arah]),
-  pemainUNI(PemainUni), format(Stream, 'status_UNI:~w.~n', [PemainUni]),
+  arah_permainan(Arah), format(Stream, 'arah_permainan:~q.~n', [Arah]),
+  pemainUNI(PemainUni), format(Stream, 'status_UNI:~q.~n', [PemainUni]),
   writeSemuaKartuPemain(Urutan, Stream),
   close(Stream),
 
@@ -34,15 +34,15 @@ saveGame :-
 loadGame :-
   write('Masukkan nama file penyimpanan: '), read(X), nl,
   open(X, read, Stream),
-  read(Stream, Term),
+  read_term(Stream, Term, []),
   format('~w', [Term]).
 
 writeSemuaKartuPemain([], _Stream).
 writeSemuaKartuPemain([H|T], Stream) :-
-  writeKartuPemain(H, Stream), writeSemuaKartuPemain(T, Stream).
+  writeKartuPemain(H, Stream), format(Stream,'~n', []), writeSemuaKartuPemain(T, Stream).
 
 writeKartuPemain(Pemain, Stream) :-
-  kartuPemain(Pemain, DaftarKartu), format(Stream, 'kartu(\'~w\'):~w.~n', [Pemain, DaftarKartu]).
+  kartuPemain(Pemain, DaftarKartu), format(Stream, 'kartu(~q):', [Pemain]), h_FormatDeck(DaftarKartu, Stream).
 
 pemainUNI(Result) :- urutanPemain(Urutan), pemainUNI(Urutan, Result).
 

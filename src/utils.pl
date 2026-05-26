@@ -52,6 +52,20 @@ h_ListIsMember(X, [_|T]) :-
 h_FormatCard(kartu(Warna,Jenis)) :-
 	format('~w-~w',[Warna,Jenis]).
 
+h_FormatCard(kartu(Warna,Jenis), Stream) :-
+  format(Stream, '~w-~w',[Warna,Jenis]).
+
+h_FormatDeck(Deck) :- h_FormatDeck(Deck, 0).
+h_FormatDeck(Deck, 0) :- write('['), h_FormatDeck(Deck, 1).
+h_FormatDeck([H|T], 1) :- h_FormatCard(H), write(','), h_FormatDeck(T, 1).
+h_FormatDeck([], 1) :- write(']'), !.
+
+h_FormatDeck(Deck, Stream) :- h_FormatDeck(Deck, Stream, 0).
+h_FormatDeck(Deck, Stream, 0) :- write(Stream, '['), h_FormatDeck(Deck, Stream, 1).
+h_FormatDeck([H|[]], Stream, 1) :- h_FormatCard(H, Stream), h_FormatDeck([], Stream, 1). 
+h_FormatDeck([H|T], Stream, 1) :- T \= [], h_FormatCard(H, Stream), write(Stream, ','), h_FormatDeck(T, Stream, 1).
+h_FormatDeck([], Stream, 1) :- write(Stream, ']'), !.
+
 h_Shuffle([], []).
 h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
     h_ListLength(Awal, Panjang),
