@@ -125,3 +125,17 @@ tangkap(_) :-
     h_ListAppendList(DaftarKartuLama, KartuPenalti, DaftarKartuBaru),
     retract(kartuPemain(Pemanggil, _)),
     asserta(kartuPemain(Pemanggil, DaftarKartuBaru)).
+
+/* Tantang valid */
+tantang :-
+    discardTop(kartu(Hitam, wildDrawFour)),
+    giliran(PemainSekarng),
+    giliranSebelumnya(PemainSebelumnya),
+    \+ canPlayWildDrawFour(PemainSebelumnya),
+
+    write('Tantangan dilakukan'), nl,
+    format('Memeriksa kartu ~w~n', [PemainSebelumnya]),
+    format('Tantangan berhasil. ~w Menerima hukuman berupa 4 kartu acak', [PemainSebelumnya]),
+
+/* Tatnang invalid */
+tantang :-
