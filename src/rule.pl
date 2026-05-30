@@ -1,4 +1,4 @@
-
+:- include('deck.pl').
 
 /* Validitas Kartu */
 kartuMainValid(kartu(Warna, Jenis)) :-
@@ -14,13 +14,11 @@ canPlayWildDrawFour(Pemain) :-
     kartuPemain(Pemain, DaftarKartu),
     \+ cekAdaKartuValid(DaftarKartu).
 
-cekAdaKartuValid([kartu(Warna, Jenis|_]) :- 
+cekAdaKartuValid([kartu(Warna, Jenis)|_]) :- 
     discardTop(kartu(_, JenisDiscard)),
     warnaAktif(WarnaAktif),
     ( (Warna = WarnaAktif, Warna \= hitam)
     ; (Jenis = JenisDiscard, Warna \= hitam)
-    !.
+    ), !.
 cekAdaKartuValid([_|T]) :-
-    cekSeluruhKartu(T).
-
-
+    cekAdaKartuValid(T).

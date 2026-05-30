@@ -1,4 +1,5 @@
 :- include('turn.pl').
+:- include('rule.pl').
 
 /* ===== AKSI UTAMA ===== */
 mainkanKartu(Indeks) :-
@@ -126,16 +127,43 @@ tangkap(_) :-
     retract(kartuPemain(Pemanggil, _)),
     asserta(kartuPemain(Pemanggil, DaftarKartuBaru)).
 
-/* Tantang valid */
+/* Tantang berhasil */
 tantang :-
-    discardTop(kartu(Hitam, wildDrawFour)),
-    giliran(PemainSekarng),
+    discardTop(kartu(hitam, wildDrawFour)),
     giliranSebelumnya(PemainSebelumnya),
+    kartuPemain(PemainSebelumnya, DaftarKartuPemainSebelumnya),
     \+ canPlayWildDrawFour(PemainSebelumnya),
+    !,
 
     write('Tantangan dilakukan'), nl,
     format('Memeriksa kartu ~w~n', [PemainSebelumnya]),
-    format('Tantangan berhasil. ~w Menerima hukuman berupa 4 kartu acak', [PemainSebelumnya]),
+    format('Tantangan berhasil. ~w menerima hukuman mendapatkan 4 kartu acak~n', [PemainSebelumnya]),
 
-/* Tatnang invalid */
+    ambilSejumlahKartu(4, KartuHukuman),
+    h_ListAppendList(DaftarKartuPemainSebelumnya, KartuHukuman, DaftarKartuBaru),
+    retract(kartuPemain(PemainSebelumnya, _)),
+    assertz(kartuPemain(PemainSebelumnya, DaftarKartuBaru)),
+	giliranSelanjutnya.
+
+/* Tantang gagal */
 tantang :-
+    discardTop(kartu(hitam, wildDrawFour)),
+    giliran(PemainSekarang),
+    kartuPemain(PemainSekarang, DaftarKartuPemainSekarang),
+    giliranSebelumnya(PemainSebelumnya),
+    canPlayWildDrawFour(PemainSebelumnya),
+    !,
+
+    write('Tantangan dilakukan'), nl,
+    format('Memeriksa kartu ~w~n', [PemainSebelumnya]),
+    format('Tantangan gagal. ~w mendapatkan 6 kartu acak~n', [PemainSekarang]),
+    
+    ambilSejumlahKartu(6, KartuHukuman),
+    h_ListAppendList(DaftarKartuPemainSekarang, KartuHukuman, DaftarKartuBaru),
+    retract(kartuPemain(PemainSekarang, _)),
+    assertz(kartuPemain(PemainSekarang, DaftarKartuBaru)),
+    giliranSelanjutnya.
+
+/* Tantang invalid */
+tantang :-
+    write('Perintah tidak dapat dilakukan. Kartu discard sekarang bukan wild draw four'), nl.
