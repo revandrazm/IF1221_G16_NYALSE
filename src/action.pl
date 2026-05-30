@@ -20,7 +20,7 @@ mainkanKartu(Indeks) :-
     (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
     format('~w memainkan kartu: ', [Pemain]),
     h_FormatCard(Kartu), write('.'), nl,
-    giliranSelanjutnya.
+    giliranSelanjutnya, !.
 
 ambilKartu :-
     giliran(Pemain),
