@@ -1,17 +1,18 @@
 :- include('turn.pl').
 :- include('rule.pl').
+:- include('efek.pl').
 
 /* ===== AKSI UTAMA ===== */
 mainkanKartu(IndeksMentah) :-
-    giliran(Pemain), 
+    giliran(Pemain),
     kartuPemain(Pemain, DaftarKartu),
     h_ListLength(DaftarKartu, JumlahKartu),
 
     Indeks is IndeksMentah - 1,
-    (   (Indeks < 0; Indeks >= JumlahKartu) 
+    (   (Indeks < 0; Indeks >= JumlahKartu)
     ->  write('Indeks kartu di luar jangkauan tanganmu!'), nl,
         fail
-    ;   
+    ;
         h_ListAtIndex(DaftarKartu, Indeks, Kartu),
         (   \+ kartuMainValid(Kartu)
         ->  write('Kesalahan: Kartu tersebut tidak valid untuk meja saat ini!'), nl,
@@ -22,12 +23,15 @@ mainkanKartu(IndeksMentah) :-
             asserta(kartuPemain(Pemain, DaftarKartuBaru)),
             retract(discardTop(_)),
             asserta(discardTop(Kartu)),
-            Kartu = kartu(Warna, _),
+            Kartu = kartu(Warna, EfekSetelah),
             h_ListLength(DaftarKartuBaru, SisaKartu),
             (SisaKartu \= 1 -> hapusStatusUni(Pemain) ; true),
             (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
-            format('~w memainkan kartu: ', [Pemain]), 
+            format('~w memainkan kartu: ', [Pemain]),
             h_FormatCard(Kartu), write('.'), nl,
+
+            aplikasiEfek(EfekSetelah),
+
             giliranSelanjutnya
         )
     ).
@@ -63,15 +67,15 @@ prosesAmbil(JumlahKartu, [KartuTeratas|SisaDeckTersedia], DeckAkhir, [KartuTerat
 /* Helpers */
 tambahStatusUni(Pemain) :-
 	uniStatus(DaftarUni),
-	( \+ h_ListIsMember(Pemain, DaftarUni)
+	(   \+ h_ListIsMember(Pemain, DaftarUni)
     ->  retract(uniStatus(_)),
         asserta(uniStatus([Pemain|DaftarUni]))
-  ; true
-  ).
+    ;   true
+    ).
 
 hapusStatusUni(Pemain) :-
 	uniStatus(DaftarUni),
-	( h_ListIsMember(Pemain, DaftarUni)
+	(   h_ListIsMember(Pemain, DaftarUni)
     ->  h_ListIndexOf(DaftarUni,Pemain,Indeks),
     		h_ListRemoveAtIndex(DaftarUni, Indeks, DaftarUniBaru),
       	retract(uniStatus(_)),
@@ -167,7 +171,7 @@ tantang :-
     write('Tantangan dilakukan'), nl,
     format('Memeriksa kartu ~w~n', [PemainSebelumnya]),
     format('Tantangan gagal. ~w mendapatkan 6 kartu acak~n', [PemainSekarang]),
-    
+
     ambilSejumlahKartu(6, KartuHukuman),
     h_ListAppendList(DaftarKartuPemainSekarang, KartuHukuman, DaftarKartuBaru),
     retract(kartuPemain(PemainSekarang, _)),
