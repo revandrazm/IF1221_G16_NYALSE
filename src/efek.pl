@@ -3,6 +3,7 @@
 :- include('rule.pl').
 
 aplikasiEfek(skip) :-
+    giliranSelanjutnya,
     giliranSelanjutnya, !.
 
 aplikasiEfek(reverse) :-
@@ -13,14 +14,16 @@ aplikasiEfek(reverse) :-
      ArahBaru = kanan),
 
     retract(arahPermainan(ArahAwal)),
-    asserta(arahPermainan(ArahBaru)), !.
+    asserta(arahPermainan(ArahBaru)),
+    giliranSelanjutnya, !.
 
 aplikasiEfek(drawTwo) :-
     giliranSelanjutnya,
-    ambilKartu, !.
+    ambilKartu,
+    giliranSelanjutnya, !.
 
 aplikasiEfek(wild) :-
-    write('Pilih warna (gunakan pilihWarna(Warna)): '),
+    write('Pilih warna (gunakan pilihWarna(Warna))'),
     retract(memilihWarna(false)),
     asserta(memilihWarna(true)).
 
@@ -33,9 +36,9 @@ pilihWarna(Warna) :-
         retract(warnaAktif(_)),
         asserta(warnaAktif(Warna)),
 
-        format('Berhasil! Warna permainan sekarang menjadi ~w.~n', [Warna]),
-    ;   write('Warna tidak valid! Silakan pilih: merah, kuning, hijau, atau biru.'), nl,
-        fail
+        format('Berhasil! Warna permainan sekarang menjadi ~w.~n', [Warna]), nl,
+        giliranSelanjutnya
+    ;   write('Warna tidak valid! Silakan pilih: merah, kuning, hijau, atau biru.'), nl
     ).
 
 pilihWarna(_) :-
@@ -43,6 +46,8 @@ pilihWarna(_) :-
 
 aplikasiEfek(wildDrawFour) :-
     giliranSelanjutnya,
-    ambilKartu, !.
+    ambilKartu,
+    giliranSelanjutnya, !.
 
-aplikasiEfek(_) :- !.
+aplikasiEfek(_) :-
+    giliranSelanjutnya, !.
