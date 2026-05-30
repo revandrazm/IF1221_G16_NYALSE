@@ -30,9 +30,7 @@ mainkanKartu(IndeksMentah) :-
             format('~w memainkan kartu: ', [Pemain]),
             h_FormatCard(Kartu), write('.'), nl,
 
-            aplikasiEfek(EfekSetelah),
-
-            giliranSelanjutnya
+            aplikasiEfek(EfekSetelah)
         )
     ).
 
