@@ -1,46 +1,93 @@
-:- include('facts.pl').
-:- include('deck.pl').
-:- include('player.pl').
-:- dynamic(gameRunning/1).
-:- initialization(main).
-
-main :- startGame.
+:- include('action.pl').
+:- include('scoring.pl').
 
 startGame :-
+    retractall(gameRunning(_)),
+    retractall(deck(_)),
+    retractall(arahPermainan(_)),
+    retractall(uniStatus(_)),
+    retractall(kartuPemain(_, _)),
+    retractall(giliran(_)),
+    retractall(urutanPemain(_)),
+    retractall(discardTop(_)),
+    retractall(warnaAktif(_)),
     assertz(gameRunning(true)),
 
     write('*******************************************'), nl,
     write('*         SELAMAT DATANG DI UNI!          *'), nl,
     write('*******************************************'), nl,
 
-    inputJumlahPemain(N),
-    inisialisasiPemain(N, ListPemain),
+    inputJumlahPemain(JumlahPemain),
+    inisialisasiPemain(JumlahPemain, DaftarPemain),
+    printUrutanAwal,
     loadKartu(Deck),
     h_Shuffle(Deck, DeckAcak),
-    bagiKartu(ListPemain, DeckAcak, SisaDeck),
+    nl, write('Setiap pemain mendapat 7 kartu acak.'), nl,
+    bagiKartu(DaftarPemain, DeckAcak, SisaDeck),
     initDiscard(SisaDeck, SisaDeckAkhir),
     
     assertz(deck(SisaDeckAkhir)),
-    assertz(arah_permainan(kanan)),
+    assertz(arahPermainan(kanan)),
+    assertz(uniStatus([])),
 
-    write('Set up selesai! Permainan dimulai!'), nl.
+    giliran(PemainAktif),
+    format('~nGiliran ~w~n', [PemainAktif]),
+    nl, write('Set up selesai! Permainan dimulai!'), nl,
+
+    gameLoop.
 
 inputJumlahPemain(N):-
     write('Masukkan jumlah pemain (2-4, akhiri dengan titik): '),
     read(Input),
-    ( integer(Input), Input >= 2, Input =< 4 -> N = Input
-    ;
-        write('Jumlah pemain tidak valid! Masukkan jumlah pemain lagi.'), nl,
+    (   integer(Input), Input >= 2, Input =< 4 
+    ->  N = Input
+    ;   write('Jumlah pemain tidak valid! Masukkan jumlah pemain lagi.'), nl,
         inputJumlahPemain(N)
-    ).
+    ),
+    nl.
 
-endgame :-
-    hitungPoinHelper([], 0);
-    hitungPoinHelper([kartu(W,J)|T], TotalPoin) :-
-        nilaiKartu(J, Nilai),
-        hitungPoinHelper(T, PoinSekarang),
-        TotalPoin is PoinSekarang + Nilai.
-    hitungPoinPemain(Pemain, Poin) :-
-        kartu_pemain(Pemain, SisaKartu),
-        hitungPoinHelper(SisaKartu, Poin).
-    
+gameLoop :-
+    cekGameOver(Pemenang), !,
+    endGame.
+
+gameLoop :-
+    giliran(PemainAktif),
+    playerTurnLoop(PemainAktif),
+    gameLoop.
+
+playerTurnLoop(Pemain) :-
+    nl, write('> Masukkan perintah: '),
+    read(Perintah),
+    jalankanPerintah(Perintah, Pemain).
+
+
+jalankanPerintah(mainkanKartu(Indeks), _) :-
+    !, mainkanKartu(Indeks).
+
+jalankanPerintah(ambilKartu, _) :-
+    !, ambilKartu.
+
+jalankanPerintah(tantang, _) :-
+    !, tantang.
+jalankanPerintah(uni(N), _) :-
+    !, uni(N).
+
+jalankanPerintah(lihatCommand, Pemain) :-
+    !, lihatCommand,
+    playerTurnLoop(Pemain).
+jalankanPerintah(lihatKartu, Pemain) :-
+    !, lihatKartu,
+    playerTurnLoop(Pemain).
+jalankanPerintah(cekInfo, Pemain) :-
+    !, cekInfo,
+    playerTurnLoop(Pemain).
+jalankanPerintah(tangkap, Pemain) :-
+    !, tangkap,
+    playerTurnLoop(Pemain).
+
+jalankanPerintah(saveGame, sistem).
+jalankanPerintah(loadGame, sistem).
+
+jalankanPerintah(_, Pemain) :-
+    write('Perintah tidak dikenali atau format salah. Ketik lihatCommand untuk melihat perintah yang tersedia.'), nl,
+    playerTurnLoop(Pemain).
