@@ -2,13 +2,14 @@
 
 /* ===== AKSI UTAMA ===== */
 mainkanKartu(Indeks) :-
-    giliran(Pemain), 
+    giliran(Pemain),
     kartuPemain(Pemain, DaftarKartu),
     h_ListLength(DaftarKartu, JumlahKartu),
-    0 =< Indeks, Indeks < JumlahKartu,
-    h_ListAtIndex(DaftarKartu, Indeks, Kartu),
+    1 =< Indeks, Indeks =< JumlahKartu,
+    IndeksNormal is Indeks-1,
+    h_ListAtIndex(DaftarKartu, IndeksNormal, Kartu),
     kartuMainValid(Kartu),
-    h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
+    h_ListRemoveAtIndex(DaftarKartu, IndeksNormal, DaftarKartuBaru),
     retract(kartuPemain(Pemain, _)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
     retract(discardTop(_)),
@@ -17,7 +18,7 @@ mainkanKartu(Indeks) :-
     h_ListLength(DaftarKartuBaru, SisaKartu),
     (SisaKartu \= 1 -> hapusStatusUni(Pemain) ; true),
     (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
-    format('~w memainkan kartu: ', [Pemain]), 
+    format('~w memainkan kartu: ', [Pemain]),
     h_FormatCard(Kartu), write('.'), nl,
     giliranSelanjutnya.
 
@@ -52,44 +53,44 @@ prosesAmbil(JumlahKartu, [KartuTeratas|SisaDeckTersedia], DeckAkhir, [KartuTerat
 /* Helpers */
 tambahStatusUni(Pemain) :-
 	uniStatus(DaftarUni),
-	(   \+ h_ListIsMember(Pemain, DaftarUni) 
-    ->  retract(uniStatus(_)), 
-        asserta(uniStatus([Pemain|DaftarUni])) 
-    ;   true 
-    ).
+	( \+ h_ListIsMember(Pemain, DaftarUni)
+    ->  retract(uniStatus(_)),
+        asserta(uniStatus([Pemain|DaftarUni]))
+  ; true
+  ).
 
 hapusStatusUni(Pemain) :-
 	uniStatus(DaftarUni),
-	(   h_ListIsMember(Pemain, DaftarUni) 
+	( h_ListIsMember(Pemain, DaftarUni)
     ->  h_ListIndexOf(DaftarUni,Pemain,Indeks),
-		h_ListRemoveAtIndex(DaftarUni, Indeks, DaftarUniBaru),
-		retract(uniStatus(_)),
-		asserta(uniStatus(DaftarUniBaru))
-	;   true
+    		h_ListRemoveAtIndex(DaftarUni, Indeks, DaftarUniBaru),
+      	retract(uniStatus(_)),
+       	asserta(uniStatus(DaftarUniBaru))
+	; true
 	).
 
 /* Uni Valid */
 uni(Indeks):-
-	giliran(Pemain), 
+	giliran(Pemain),
     kartuPemain(Pemain,DaftarKartu),
 	h_ListLength(DaftarKartu, 2),
-	h_ListGetElement(DaftarKartu, Indeks, Kartu), 
+	h_ListGetElement(DaftarKartu, Indeks, Kartu),
     kartuMainValid(Kartu),
 	!,
 	h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
-	retract(kartuPemain(Pemain, _)), 
+	retract(kartuPemain(Pemain, _)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
-	retract(discardTop(_)), 
+	retract(discardTop(_)),
     asserta(discardTop(Kartu)),
 	tambahStatusUni(Pemain),
-	format('~w memainkan kartu: ',[Pemain]), 
+	format('~w memainkan kartu: ',[Pemain]),
     h_FormatCard(Kartu), write('.'), nl,
 	format('~w menyerukan UNI!', [Pemain]), nl,
 	giliranSelanjutnya.
 
 /* Uni Invalid */
 uni(_) :-
-	giliran(Pemain), 
+	giliran(Pemain),
 	format('Perintah uni tidak valid! ~w mendapat 1 kartu penalti.', [Pemain]), nl,
 	ambilSejumlahKartu(1, KartuPenalti),
 	kartuPemain(Pemain, DaftarKartuLama),
