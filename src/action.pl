@@ -2,25 +2,35 @@
 :- include('rule.pl').
 
 /* ===== AKSI UTAMA ===== */
-mainkanKartu(Indeks) :-
+mainkanKartu(IndeksMentah) :-
     giliran(Pemain), 
     kartuPemain(Pemain, DaftarKartu),
     h_ListLength(DaftarKartu, JumlahKartu),
-    0 =< Indeks, Indeks < JumlahKartu,
-    h_ListAtIndex(DaftarKartu, Indeks, Kartu),
-    kartuMainValid(Kartu),
-    h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
-    retract(kartuPemain(Pemain, _)),
-    asserta(kartuPemain(Pemain, DaftarKartuBaru)),
-    retract(discardTop(_)),
-    asserta(discardTop(Kartu)),
-    Kartu = kartu(Warna, _),
-    h_ListLength(DaftarKartuBaru, SisaKartu),
-    (SisaKartu \= 1 -> hapusStatusUni(Pemain) ; true),
-    (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
-    format('~w memainkan kartu: ', [Pemain]), 
-    h_FormatCard(Kartu), write('.'), nl,
-    giliranSelanjutnya.
+
+    Indeks is IndeksMentah - 1,
+    (   (Indeks < 0; Indeks >= JumlahKartu) 
+    ->  write('Indeks kartu di luar jangkauan tanganmu!'), nl,
+        fail
+    ;   
+        h_ListAtIndex(DaftarKartu, Indeks, Kartu),
+        (   \+ kartuMainValid(Kartu)
+        ->  write('Kesalahan: Kartu tersebut tidak valid untuk meja saat ini!'), nl,
+            fail
+        ;
+            h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
+            retract(kartuPemain(Pemain, _)),
+            asserta(kartuPemain(Pemain, DaftarKartuBaru)),
+            retract(discardTop(_)),
+            asserta(discardTop(Kartu)),
+            Kartu = kartu(Warna, _),
+            h_ListLength(DaftarKartuBaru, SisaKartu),
+            (SisaKartu \= 1 -> hapusStatusUni(Pemain) ; true),
+            (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
+            format('~w memainkan kartu: ', [Pemain]), 
+            h_FormatCard(Kartu), write('.'), nl,
+            giliranSelanjutnya
+        )
+    ).
 
 ambilKartu :-
     giliran(Pemain),

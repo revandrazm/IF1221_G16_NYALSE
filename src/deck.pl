@@ -67,7 +67,7 @@ initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
     SisaAkhir = Sisa,
     assertz(discardTop(kartu(Warna, Jenis))),
     assertz(warnaAktif(Warna)),
-    write('Kartu awal di discard pile: '), write(kartu(Warna, Jenis)), nl.
+    format('~nKartu discard top: ~w-~w~n', [Warna, Jenis]).
 initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
     h_ListLength(Sisa, Panjang),
     random(0, Panjang, Indeks),
