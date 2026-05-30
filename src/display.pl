@@ -5,8 +5,9 @@ daftarAksiUtama([mainkanKartu(indeksKartu), ambilKartu,
 daftarAksiPendukung([lihatCommand, lihatKartu, cekInfo]).
 
 lihatCommand :-
+    daftarAksiPendukung(DaftarPendukung)
     write('Aksi utama yang tersedia:'), nl,
-    printAksiUtama, nl,
+    printList(DaftarPendukung), nl,
     write('Aksi pendukung yang tersedia:'), nl,
     printAksiPendukung, !.
 
@@ -18,10 +19,6 @@ printList([H|T], N) :-
 
 printAksiUtama :-
     daftarAksiUtama(DaftarAksi),
-    printList(DaftarAksi, 1).
-
-printAksiPendukung :-
-    daftarAksiPendukung(DaftarAksi),
     printList(DaftarAksi, 1).
 
 /* Menampilkan Kartu Tangan Pemain */
@@ -114,7 +111,7 @@ printUrutanAwal:-
 
 cetakDaftarUrutanPemain([]) :- !.
 cetakDaftarUrutanPemain([PemainTerakhir]) :-
-    format('~w.', [PemainTerakhir]), 
+    format('~w.', [PemainTerakhir]),
     !.
 cetakDaftarUrutanPemain([PemainAktif|SisaPemain]) :-
     format('~w - ', [PemainAktif]),
