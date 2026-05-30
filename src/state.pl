@@ -7,5 +7,6 @@
 :- dynamic(kartuPemain/2).			% Nama pemain, list kartu []
 :- dynamic(deck/1).					% Sisa kartu di deck
 :- dynamic(uniStatus/1).			% List pemain yg sudah uni
+:- dynamic(gameRunning/1).
 
 /* Bonus */
