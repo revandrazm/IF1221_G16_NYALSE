@@ -104,3 +104,18 @@ printPeringkat([(Pemain, Poin)|Sisa], Peringkat) :-
     format('~w. ~w (~w Poin)~n', [Peringkat, Pemain, Poin]),
     PeringkatSelanjutnya is Peringkat + 1,
     printPeringkat(Sisa, PeringkatSelanjutnya).
+
+printUrutanAwal:-
+    nl,
+    urutanPemain(DaftarPemain),
+    write('Urutan pemain: '),
+    cetakDaftarUrutanPemain(DaftarPemain),
+    nl.
+
+cetakDaftarUrutanPemain([]) :- !.
+cetakDaftarUrutanPemain([PemainTerakhir]) :-
+    format('~w.', [PemainTerakhir]), 
+    !.
+cetakDaftarUrutanPemain([PemainAktif|SisaPemain]) :-
+    format('~w - ', [PemainAktif]),
+    cetakDaftarUrutanPemain(SisaPemain).
