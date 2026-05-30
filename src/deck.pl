@@ -3,8 +3,15 @@
 
 /* Daftar Kartu Valid*/
 warnaDasar([merah, kuning, hijau, biru]).
-jenisKartu([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, skip, reverse, drawTwo]).
-kartuHitam([kartu(hitam, wild), kartu(hitam, wildDrawFour)]).
+jenisKartu([0, 1, 1, 2, 2, 3, 3, 4, 4, 
+            5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 
+            skip, skip, reverse, reverse, drawTwo, drawTwo]).
+kartuHitam([kartu(hitam, wild), kartu(hitam, wild), 
+            kartu(hitam, wild), kartu(hitam, wild), 
+            kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour), 
+            kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour)]).
+
+/* Nilai Kartu */
 nilaiKartu(0, 0).
 nilaiKartu(1, 1).
 nilaiKartu(2, 2).
@@ -17,14 +24,19 @@ nilaiKartu(8, 8).
 nilaiKartu(9, 9).
 nilaiKartu(skip, 10).
 nilaiKartu(reverse, 10).
-nilaiKartu(draw_two, 10).
+nilaiKartu(drawTwo, 10).
 nilaiKartu(wild, 20).
-nilaiKartu(wild_draw_four, 20).
+nilaiKartu(wildDrawFour, 20).
 
 /* Validitas Kartu */
 kartuMainValid(kartu(Warna, Jenis)) :-
-    discard_top(kartu(WarnaDiscard, JenisDiscard)),
-    ((Warna=WarnaDiscard,Warna\=hitam); (Jenis=JenisDiscard,Jenis\=wild); (Jenis=wild,JenisDiscard\=wild); Jenis=wildDrawFour).
+    discardTop(kartu(_, JenisDiscard)),
+    warnaAktif(WarnaAktif),
+    ( (Warna = WarnaAktif, Warna \= hitam)
+    ; (Jenis = JenisDiscard, Jenis \= wild, Jenis \= wildDrawFour)
+    ; (Jenis = wild, JenisDiscard \= wild)
+    ; (Jenis = wildDrawFour, JenisDiscard \= wildDrawFour)
+    ).
 
 /* Formatting Kartu */
 formatKartu(kartu(Warna,Jenis), Atom):-
@@ -41,34 +53,23 @@ kombinasiSemuaWarna([Warna|SisaWarna], Jenis, HasilAkhir) :-
     kombinasiSemuaWarna(SisaWarna, Jenis, HasilSementara),
     h_ListAppendList(HasilSementara, HasilSatuWarna, HasilAkhir).
 
-% Convert fakta kartu ke list
-loadKartu(ListKartu):-
-    warnaDasar(ListWarna),
-    jenisKartu(ListJenis),
-    kartuHitam(ListKartuHitam),
-    kombinasiSemuaWarna(ListWarna, ListJenis, ListKartuWarna),
-    h_ListAppendList(ListKartuHitam, ListKartuWarna, ListKartu).
+/* Mengubah fakta kartu ke list */
+loadKartu(DaftarKartu):-
+    warnaDasar(DaftarWarna),
+    jenisKartu(DaftarJenis),
+    kartuHitam(DaftarKartuHitam),
+    kombinasiSemuaWarna(DaftarWarna, DaftarJenis, DaftarKartuWarna),
+    h_ListAppendList(DaftarKartuHitam, DaftarKartuWarna, DaftarKartu).
 
-bagiKartu([], Deck, Deck).
-bagiKartu([Pemain|SisaPemain], Deck, SisaDeck):-
-    ambilKartu(KartuPemain, 7, Deck, DeckSementara),
-    assertz(kartu_pemain(Pemain, KartuPemain)),
-    bagiKartu(SisaPemain, DeckSementara, SisaDeck).
-
-ambilKartu([], 0, Deck, Deck) :- !.
-ambilKartu([H|TAmbil], N, [H|TDeck], SisaDeck) :-
-    N > 0,
-    N1 is N - 1,
-    ambilKartu(TAmbil, N1, TDeck, SisaDeck).
-
+/* Menginisiasi kartu discard awal */
 initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
     Warna \= hitam, !,
     SisaAkhir = Sisa,
-    assertz(discard_top(kartu(Warna, Jenis))),
-    assertz(warna_aktif(Warna)),
-    write('Kartu awal di discard pile: '), write(kartu(Warna, Jenis)), nl.
+    assertz(discardTop(kartu(Warna, Jenis))),
+    assertz(warnaAktif(Warna)),
+    format('~nKartu discard top: ~w-~w~n', [Warna, Jenis]).
 initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
     h_ListLength(Sisa, Panjang),
-    random(0, Panjang, Index),
-    h_ListInsertAtIndex(Sisa, Index, kartu(Warna, Jenis), DeckBaru),
+    random(0, Panjang, Indeks),
+    h_ListInsertAtIndex(Sisa, Indeks, kartu(Warna, Jenis), DeckBaru),
     initDiscard(DeckBaru, SisaAkhir).

@@ -1,25 +1,37 @@
-:- include('utils.pl').
-:- include('state.pl').
 :- include('deck.pl').
 
-inisialisasiPemain(N, ListPemain) :-
-    inputNama(N, [], ListPemainUtuh),
-    h_Shuffle(ListPemainUtuh, ListPemainAcak),
-    ListPemain = ListPemainAcak,
-    assertz(urutan_pemain(ListPemain)),
-    [FirstPlayer|_] = ListPemain,
-    assertz(giliran(FirstPlayer)).
+/* Inisialisasi pemain awal */
+inisialisasiPemain(JumlahPemain, DaftarPemain) :-
+    inputNama(JumlahPemain, [], DaftarPemainUtuh),
+    h_Shuffle(DaftarPemainUtuh, DaftarPemainAcak),
+    DaftarPemain = DaftarPemainAcak,
+    assertz(urutanPemain(DaftarPemain)),
+    [PemainPertama|_] = DaftarPemain,
+    assertz(giliran(PemainPertama)).
 
-inputNama(0, Acc, Acc) :- !.
-inputNama(N, Acc, Result) :-
-    N > 0,
+/* Input nama pemain */
+inputNama(0, Akumulasi, Akumulasi) :- !.
+inputNama(JumlahPemain, Akumulasi, Hasil) :-
+    JumlahPemain > 0,
     write('Masukkan nama pemain (akhiri dengan titik): '),
     read(Nama),
-    (h_ListIsMember(Nama, Acc) ->
-        write('Nama sudah digunakan, gunakan nama lain!'), nl,
-        inputNama(N, Acc, Result)
-    ;
-        N1 is N - 1,
-        append(Acc, [Nama], NextAcc),
-        inputNama(N1, NextAcc, Result)
+    (   h_ListIsMember(Nama, Akumulasi) 
+    ->  write('Nama sudah digunakan, gunakan nama lain!'), nl,
+        inputNama(JumlahPemain, Akumulasi, Hasil)
+    ;   JumlahPemainSisa is JumlahPemain - 1,
+        h_ListAppendElement(Akumulasi, Nama, AkumulasiBerikutnya),
+        inputNama(JumlahPemainSisa, AkumulasiBerikutnya, Hasil)
     ).
+
+/* Pembagian kartu kepada pemain */
+bagiKartu([], Deck, Deck).
+bagiKartu([Pemain|SisaPemain], Deck, SisaDeck):-
+    ambilKartuAwal(KartuPemain, 7, Deck, DeckSementara),
+    assertz(kartuPemain(Pemain, KartuPemain)),
+    bagiKartu(SisaPemain, DeckSementara, SisaDeck).
+
+ambilKartuAwal([], 0, Deck, Deck) :- !.
+ambilKartuAwal([KartuTerambil|SisaAmbilan], JumlahKartuDiambil, [KartuTerambil|SisaDeck], DeckAkhir) :-
+    JumlahKartuDiambil > 0,
+    SisaJumlahKartuDiambil is JumlahKartuDiambil - 1,
+    ambilKartuAwal(SisaAmbilan, SisaJumlahKartuDiambil, SisaDeck, DeckAkhir).

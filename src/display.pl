@@ -1,71 +1,123 @@
-:- include('state.pl').
-:- include('utils.pl').
+:- include('deck.pl').
 
-aksiUtama(mainkanKartu(indexKartu)).
-aksiUtama(ambilKartu).
-aksiUtama(tantang).
-aksiUtama(uni(indexKartu)).
-aksiUtama(tangkap(namaPemain)).
+/* Daftar Aksi yang Tersedia */
+daftarAksiUtama([mainkanKartu(indeksKartu), ambilKartu, 
+                 tantang, uni(indeksKartu), tangkap(namaPemain)]).
 
-aksiPendukung(lihatCommand).
-aksiPendukung(lihatKartu).
-aksiPendukung(cekInfo).
+daftarAksiPendukung([lihatCommand, lihatKartu, cekInfo]).
 
 lihatCommand :-
-    write('Aksi utama yang tersedia:'),
-    nl,
-    printAksiUtama,
-    nl,
-    write('Aksi pendukung yang tersedia:'),
-    nl,
-    printAksiPendukung,
-    !.
+    write('Aksi utama yang tersedia:'), nl,
+    printAksiUtama, nl,
+    write('Aksi pendukung yang tersedia:'), nl,
+    printAksiPendukung, !.
 
 printList([], _).
-printList([Head|Tail], N) :-
-    format('~w. ~w~n', [N, Head]),
-    NNext is N + 1,
-    printList(Tail, NNext).
+printList([H|T], N) :-
+    format('~w. ~w~n', [N, H]),
+    NBerikutnya is N + 1,
+    printList(T, NBerikutnya).
 
 printAksiUtama :-
-    findall(Aksi, aksiUtama(Aksi), Out),
-    printList(Out, 1).
+    daftarAksiUtama(DaftarAksi),
+    printList(DaftarAksi, 1).
 
 printAksiPendukung :-
-    findall(Aksi, aksiPendukung(Aksi), Out),
-    printList(Out, 1).
+    daftarAksiPendukung(DaftarAksi),
+    printList(DaftarAksi, 1).
 
-/* Helper */
+/* Menampilkan Kartu Tangan Pemain */
 lihatKartu([], _) :- !.
-lihatKartu([kartu(Warna,Jenis)|T], N) :-
-	format('~d. ', [N]), h_FormatCard(kartu(Warna, Jenis)), nl,
-	N2 is N+1,
-	lihatKartu(T,N2).
+lihatKartu([kartu(Warna,Jenis)|Sisa], N) :-
+	format('~d. ', [N]), 
+	h_FormatCard(kartu(Warna, Jenis)), nl,
+	NBerikutnya is N+1,
+	lihatKartu(Sisa, NBerikutnya).
 
-formatUrutanHelp([]) :- !.
-formatUrutanHelp([H|T]) :-
+/* Format Urutan Pemain */
+formatUrutanSisa([]) :- !.
+formatUrutanSisa([H|T]) :-
 	write(' - '), write(H),
-	formatUrutan(T).
+	formatUrutanSisa(T).
 
 formatUrutan([H|T]):-
 	write(H),
-	formatUrutanHelp(T).
+	formatUrutanSisa(T).
 
 printUrutan([], _) :- !.
 printUrutan([H|T], N):-
-	format('Nama pemain ~d: ~s', [N, H]), nl,
-	kartu_pemain(H,ListKartu), h_ListLength(ListKartu,Ans),
-	format('Jumlah kartu: ~d', [Ans]), nl, nl,
-	N2 is N + 1, printUrutan(T,N2).
+	format('Nama pemain ~d: ~w', [N, H]), nl,
+	kartuPemain(H, DaftarKartu), 
+	h_ListLength(DaftarKartu, JumlahKartu),
+	format('Jumlah kartu: ~d', [JumlahKartu]), nl, nl,
+	NBerikutnya is N + 1, 
+	printUrutan(T, NBerikutnya).
 
-/* Utama */
+/* Menampilkan Informasi Permainan */
 lihatKartu :-
-	giliran(Player), kartu_pemain(Player, Deck), nl,
+	giliran(Player), 
+	kartuPemain(Player, DaftarKartu), nl,
 	write('Berikut kartu yang anda miliki'), nl,
-	lihatKartu(Deck,1).
+	lihatKartu(DaftarKartu, 1).
 
 cekInfo :-
-	discard_top(Top), urutan_pemain(Urutan),
-	write('Kartu discard top: '), h_FormatCard(Top), nl, nl,
+	discardTop(KartuTeratas), 
+	urutanPemain(Urutan),
+	write('Kartu discard top: '), h_FormatCard(KartuTeratas), nl, nl,
 	write('Urutan pemain: '), formatUrutan(Urutan), nl, nl,
 	printUrutan(Urutan, 1).
+
+/* Menampilkan Kartu dalam Format Penjumlahan */
+printKartu([Kartu]) :- 
+    h_FormatCard(Kartu),
+    write(' = ').
+printKartu([Kartu|Sisa]) :-
+    h_ListLength(Sisa, Panjang),
+    Panjang > 0, !,
+    h_FormatCard(Kartu),
+    write(' + '),
+    printKartu(Sisa).
+
+printPoin([kartu(_, Jenis)]) :-
+    nilaiKartu(Jenis, Poin),
+    format('~w = ', [Poin]).
+printPoin([kartu(_, Jenis)|Sisa]) :-
+    h_ListLength(Sisa, Panjang),
+    Panjang > 0, !,
+    nilaiKartu(Jenis, Poin),
+    format('~w + ', [Poin]),
+    printPoin(Sisa).
+
+printSkor([]) :- !.
+printSkor([(Pemain, Poin)|Sisa]) :-
+    kartuPemain(Pemain, []), !, 
+    format('~w: kartu habis = ~w poin~n', [Pemain, Poin]),
+    printSkor(Sisa).
+printSkor([(Pemain, Poin)|Sisa]) :-
+    kartuPemain(Pemain, DaftarKartu),
+    format('~w: ', [Pemain]), 
+    printKartu(DaftarKartu), 
+    printPoin(DaftarKartu), 
+    format('~w poin~n', [Poin]),
+    printSkor(Sisa).
+
+printPeringkat([], _) :- !.
+printPeringkat([(Pemain, Poin)|Sisa], Peringkat) :-
+    format('~w. ~w (~w Poin)~n', [Peringkat, Pemain, Poin]),
+    PeringkatSelanjutnya is Peringkat + 1,
+    printPeringkat(Sisa, PeringkatSelanjutnya).
+
+printUrutanAwal:-
+    nl,
+    urutanPemain(DaftarPemain),
+    write('Urutan pemain: '),
+    cetakDaftarUrutanPemain(DaftarPemain),
+    nl.
+
+cetakDaftarUrutanPemain([]) :- !.
+cetakDaftarUrutanPemain([PemainTerakhir]) :-
+    format('~w.', [PemainTerakhir]), 
+    !.
+cetakDaftarUrutanPemain([PemainAktif|SisaPemain]) :-
+    format('~w - ', [PemainAktif]),
+    cetakDaftarUrutanPemain(SisaPemain).

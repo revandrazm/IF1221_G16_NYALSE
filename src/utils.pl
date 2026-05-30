@@ -1,25 +1,3 @@
-/* Initialize game State */
-testInit :-
-    retractall(giliran(_)),
-    retractall(urutan_pemain(_)),
-    retractall(arah_permainan(_)),
-    retractall(kartu_pemain(_, _)),
-    retractall(discard_top(_)),
-    retractall(uni_status(_)),
-    retractall(deck(_)),
-
-    loadKartu(Dek),
-
-    asserta(giliran(player1)),
-    asserta(urutan_pemain([player1, player2, player3])),
-    asserta(arah_permainan(kiri)),
-    asserta(kartu_pemain(player1, [kartu(merah,4),kartu(merah,6)])),
-    asserta(kartu_pemain(player2, [])),
-    asserta(kartu_pemain(player3, [])),
-    asserta(discard_top(kartu(merah, 5))),
-    asserta(uni_status([])),
-    asserta(deck(Dek)).
-
 /* Specific Utils */
 h_FormatCard(kartu(Warna,Jenis)) :-
 	format('~w-~w',[Warna,Jenis]).
@@ -27,9 +5,9 @@ h_FormatCard(kartu(Warna,Jenis)) :-
 h_Shuffle([], []) :- !.
 h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
     h_ListLength(Awal, Panjang),
-    random(0, Panjang, Index),
-    h_ListGetElement(Awal, Index, ElemenAcak),
-    h_ListRemoveAtIndex(Awal, Index, AwalSisa),
+    random(0, Panjang, Indeks),
+    h_ListGetElement(Awal, Indeks, ElemenAcak),
+    h_ListRemoveAtIndex(Awal, Indeks, AwalSisa),
     h_Shuffle(AwalSisa, SisaAcak).
 
 /* Basic Utils */
@@ -38,15 +16,18 @@ h_ListLength([_|T], N) :-
     h_ListLength(T, N2),
     N is N2+1.
 
-h_ListAppendElement([], Item, [Item]) :- !.
-h_ListAppendElement([H|T], Item, [H|R]) :-
-    h_ListAppendElement(T, Item, R).
+h_ListAppendElement([], Elemen, [Elemen]) :- !.
+h_ListAppendElement([H|T], Elemen, [H|R]) :-
+    h_ListAppendElement(T, Elemen, R).
 
 h_ListAppendList([], X, X) :- !.
-h_ListAppendList([H|T], X, [H|TResult]) :-
-    h_ListAppendList(T, X, TResult).
+h_ListAppendList([H|T], X, [H|THasil]) :-
+    h_ListAppendList(T, X, THasil).
 
-h_ListReverse(L, R) :- h_ListLength(L, N), h_ListReverse(L, R, N).
+h_ListReverse(L, R) :- 
+    h_ListLength(L, N), 
+    h_ListReverse(L, R, N).
+h_ListReverse([], [], 0) :- !.
 h_ListReverse(List, List, 1) :- !.
 h_ListReverse([H|T], R, N) :-
     N > 1,
@@ -59,26 +40,26 @@ h_ListIndexOf([_|T], X, N) :-
     h_ListIndexOf(T, X, N2),
     N is N2+1.
 
-h_ListAtIndex(List, Idx, R) :-
-    h_ListIndexOf(List, R, Idx).
+h_ListAtIndex(List, Indeks, R) :-
+    h_ListGetElement(List, Indeks, R).
 
 h_ListInsertAtIndex(List, 0, X, [X|List]) :- !.
-h_ListInsertAtIndex([H|T], Idx, X, [H|R2]) :-
-    Idx > 0,
-    Idx2 is Idx-1,
-    h_ListInsertAtIndex(T, Idx2, X, R2).
+h_ListInsertAtIndex([H|T], Indeks, X, [H|R]) :-
+    Indeks > 0,
+    IndeksBerikutnya is Indeks - 1,
+    h_ListInsertAtIndex(T, IndeksBerikutnya, X, R).
 
 h_ListRemoveAtIndex([_|T], 0, T) :- !.
-h_ListRemoveAtIndex([H|T], Idx, [H|R]) :-
-    Idx > 0,
-    Idx2 is Idx-1,
-    h_ListRemoveAtIndex(T, Idx2, R).
+h_ListRemoveAtIndex([H|T], Indeks, [H|R]) :-
+    Indeks > 0,
+    IndeksBerikutnya is Indeks - 1,
+    h_ListRemoveAtIndex(T, IndeksBerikutnya, R).
 
-h_ListGetElement([E|_], 0, E) :- !.
-h_ListGetElement([_|T], I, Element) :-
-    I > 0,
-    I1 is I - 1,
-    h_ListGetElement(T, I1, Element).
+h_ListGetElement([Elemen|_], 0, Elemen) :- !.
+h_ListGetElement([_|T], Indeks, Elemen) :-
+    Indeks > 0,
+    IndeksBerikutnya is Indeks - 1,
+    h_ListGetElement(T, IndeksBerikutnya, Elemen).
 
 h_ListIsMember(X, [X|_]) :- !.
 h_ListIsMember(X, [_|T]) :-
