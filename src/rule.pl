@@ -14,7 +14,7 @@ canPlayWildDrawFour(Pemain) :-
     kartuPemain(Pemain, DaftarKartu),
     \+ cekAdaKartuValid(DaftarKartu).
 
-cekAdaKartuValid([kartu(Warna, Jenis)|_]) :- 
+cekAdaKartuValid([kartu(Warna, Jenis)|_]) :-
     discardTop(kartu(_, JenisDiscard)),
     warnaAktif(WarnaAktif),
     ( (Warna = WarnaAktif, Warna \= hitam)
@@ -22,3 +22,9 @@ cekAdaKartuValid([kartu(Warna, Jenis)|_]) :-
     ), !.
 cekAdaKartuValid([_|T]) :-
     cekAdaKartuValid(T).
+
+/* Validitas Warna */
+cekWarnaValid(merah).
+cekWarnaValid(kuning).
+cekWarnaValid(hijau).
+cekWarnaValid(biru).
