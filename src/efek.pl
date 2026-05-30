@@ -1,33 +1,25 @@
 :- include('state.pl').
-:- include('utils.pl').
 :- include('turn.pl').
-:- include('action.pl').
 
 aplikasiEfek(skip) :-
-    giliranSelanjutnya,
     giliranSelanjutnya, !.
 
 aplikasiEfek(reverse) :-
-    arah_permainan(ArahAwal),
+    arahPermainan(ArahAwal),
 
     (ArahAwal == kanan ->
      ArahBaru = kiri ;
      ArahBaru = kanan),
 
-    retract(arah_permainan(ArahAwal)),
-    asserta(arah_permainan(ArahBaru)),
-
-    giliranSelanjutnya, !.
+    retract(arahPermainan(ArahAwal)),
+    asserta(arahPermainan(ArahBaru)), !.
 
 aplikasiEfek(drawTwo) :-
     giliranSelanjutnya,
-    ambilKartu,
-    giliranSelanjutnya, !.
+    ambilKartu, !.
 
 aplikasiEfek(wildDrawFour) :-
     giliranSelanjutnya,
-    ambilKartu,
-    giliranSelanjutnya, !.
+    ambilKartu, !.
 
-aplikasiEfek(_):
-    giliranSelanjutnya.
+aplikasiEfek(_) :- !.
