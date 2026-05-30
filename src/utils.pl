@@ -1,25 +1,3 @@
-/* Initialize game State */
-testInit :-
-    retractall(giliran(_)),
-    retractall(urutanPemain(_)),
-    retractall(arahPermainan(_)),
-    retractall(kartuPemain(_, _)),
-    retractall(discardTop(_)),
-    retractall(uniStatus(_)),
-    retractall(deck(_)),
-    
-    loadKartu(Deck),
-    h_Shuffle(Deck, DeckAcak),
-    asserta(giliran(player1)),
-    asserta(urutanPemain([player1, player2, player3])),
-    asserta(arahPermainan(kiri)),
-    asserta(kartuPemain(player1, [kartu(merah,4),kartu(merah,6)])),
-    asserta(kartuPemain(player2, [])),
-    asserta(kartuPemain(player3, [])),
-    asserta(discardTop(kartu(merah, 5))),
-    asserta(uniStatus([])),
-    asserta(deck(DeckAcak)).
-
 /* Specific Utils */
 h_FormatCard(kartu(Warna,Jenis)) :-
 	format('~w-~w',[Warna,Jenis]).
