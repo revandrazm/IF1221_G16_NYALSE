@@ -17,6 +17,8 @@ startGame :-
     retractall(warnaAktif(_)),
     assertz(gameRunning(true)),
 
+    randomize,
+
     write('*******************************************'), nl,
     write('*         SELAMAT DATANG DI UNI!          *'), nl,
     write('*******************************************'), nl,
@@ -27,7 +29,7 @@ startGame :-
     h_Shuffle(Deck, DeckAcak),
     bagiKartu(DaftarPemain, DeckAcak, SisaDeck),
     initDiscard(SisaDeck, SisaDeckAkhir),
-    
+
     assertz(deck(SisaDeckAkhir)),
     assertz(arahPermainan(kanan)),
     assertz(uniStatus([])),
@@ -37,7 +39,7 @@ startGame :-
 inputJumlahPemain(N):-
     write('Masukkan jumlah pemain (2-4, akhiri dengan titik): '),
     read(Input),
-    (   integer(Input), Input >= 2, Input =< 4 
+    (   integer(Input), Input >= 2, Input =< 4
     ->  N = Input
     ;   write('Jumlah pemain tidak valid! Masukkan jumlah pemain lagi.'), nl,
         inputJumlahPemain(N)
