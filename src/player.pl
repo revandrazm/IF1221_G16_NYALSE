@@ -13,7 +13,11 @@ inputNama(JumlahPemain, Akumulasi, Hasil) :-
     JumlahPemain > 0,
     write('Masukkan nama pemain (akhiri dengan titik): '),
     read(Nama),
-    (   h_ListIsMember(Nama, Akumulasi)
+    name(Nama, [ASCIIAwal|_]),
+    (   (ASCIIAwal < 65 ; ASCIIAwal > 90)
+    ->  write('Nama harus diawali huruf kapital!'), nl,
+        inputNama(JumlahPemain, Akumulasi, Hasil)
+    ;   h_ListIsMember(Nama, Akumulasi)
     ->  write('Nama sudah digunakan, gunakan nama lain!'), nl,
         inputNama(JumlahPemain, Akumulasi, Hasil)
     ;   JumlahPemainSisa is JumlahPemain - 1,

@@ -72,8 +72,16 @@ gameLoop :-
 playerTurnLoop(Pemain) :-
     nl, write('> Masukkan perintah: '),
     read(Perintah),
-    jalankanPerintah(Perintah, Pemain).
+    (   memilihWarna(true), \+ (Perintah = pilihWarna(_); Perintah = lihatCommand; Perintah = cekInfo; Perintah = lihatKartu)
+    ->  write('Anda harus memilih warna! Gunakan pilihWarna(Warna).'), nl,
+        playerTurnLoop(Pemain)
 
+    ;   ancamanHukuman(true), \+ (Perintah = tantang; Perintah = ambilKartu; Perintah = lihatCommand; Perintah = cekInfo; Perintah = lihatKartu)
+    ->  write('Anda terkena efek Wild Draw Four! Anda HANYA boleh memilih ambilKartu atau tantang.'), nl,
+        playerTurnLoop(Pemain)
+
+    ;   jalankanPerintah(Perintah, Pemain)
+    ).
 
 jalankanPerintah(mainkanKartu(Indeks), Pemain) :-
     !, 
@@ -103,6 +111,19 @@ jalankanPerintah(uni(N), Pemain) :-
     ->  true 
     ;   playerTurnLoop(Pemain)
     ).
+jalankanPerintah(godsHand, Pemain) :-
+    !, 
+    (   godsHand 
+    ->  true 
+    ;   playerTurnLoop(Pemain)
+    ).
+
+jalankanPerintah(tangkap(Target), Pemain) :-
+    !,
+    (   tangkap(Target) 
+    ->  true 
+    ;   playerTurnLoop(Pemain)
+    ).
 
 jalankanPerintah(pilihWarna(Warna), Pemain) :-
     !,
@@ -123,27 +144,15 @@ jalankanPerintah(cekInfo, Pemain) :-
     !, cekInfo,
     playerTurnLoop(Pemain).
 
-jalankanPerintah(tangkap(Target), Pemain) :-
-    !, tangkap(Target),
-    playerTurnLoop(Pemain).
-jalankanPerintah(godsHand, Pemain) :-
-    !, godsHand,
-    playerTurnLoop(Pemain).
-
-<<<<<<< HEAD
 jalankanPerintah(saveGame, Pemain) :-
     !,
-    write('Fitur saveGame belum diimplementasi.'), nl,
+    saveGame,
     playerTurnLoop(Pemain).
 
 jalankanPerintah(loadGame, Pemain) :-
     !,
-    write('Fitur loadGame belum diimplementasi.'), nl,
+    loadGame,
     playerTurnLoop(Pemain).
-=======
-jalankanPerintah(saveGame, Pemain) :- saveGame.
-jalankanPerintah(loadGame, Pemain) :- loadGame.
->>>>>>> e8e0e9e97ad452d6579bf1cf1cb86b966bc80fe8
 
 jalankanPerintah(_, Pemain) :-
     write('Perintah tidak dikenali atau format salah.'), nl,
