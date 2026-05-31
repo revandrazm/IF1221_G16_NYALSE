@@ -18,9 +18,7 @@ h_JumlahKartuPemain(Pemain, JumlahKartu) :-
 insertTail([], X, X).
 insertTail([H|T], X, [H|R]) :- insertTail(T, X, R).
 
-cls :- 
-    write('\e[2J'),
-    write('\e[H').
+cls :- write('\33\[2J').
 
 h_ListLength([], 0) :- !.
 h_ListLength([_|T], N) :-
