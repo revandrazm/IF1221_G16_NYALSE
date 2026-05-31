@@ -19,6 +19,15 @@ insertTail([], X, X).
 insertTail([H|T], X, [H|R]) :- insertTail(T, X, R).
 
 /* Clear Screen Lintas Platform */
+tungguLanjut :-
+    write('[?] Ketik "y." lalu enter untuk melanjutkan: '),
+    read(Input),
+    (   Input == y 
+    ->  true
+    ;   write('[!] Input salah. Tolong ketik "y."'), nl,
+        tungguLanjut
+    ).
+
 cls :- 
     osSistem(windows), 
     !, 

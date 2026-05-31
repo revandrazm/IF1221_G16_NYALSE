@@ -14,6 +14,7 @@ giliranSelanjutnya :-
     retract(giliran(PemainSekarang)),
     asserta(giliran(PemainBerikutnya)),
 
+    tungguLanjut,
     cls,
 
     discardTop(KartuMeja),

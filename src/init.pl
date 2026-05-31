@@ -48,6 +48,7 @@ startGame :-
 
     giliran(PemainAktif),
     nl, write('[i] Set up selesai! Permainan dimulai!'), nl,
+    tungguLanjut,
     cls,
     discardTop(KartuMeja),
     warnaAktif(Warna),
@@ -174,6 +175,7 @@ jalankanPerintah(loadGame, _) :-
     !,
     loadGame,
     giliran(PemainAktif),
+    tungguLanjut,
     cls,
     discardTop(KartuMeja),
     warnaAktif(Warna),
