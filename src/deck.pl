@@ -1,6 +1,3 @@
-:- include('state.pl').
-:- include('utils.pl').
-
 /* Daftar Kartu Valid*/
 warnaDasar([merah, kuning, hijau, biru]).
 jenisKartu([0, 1, 1, 2, 2, 3, 3, 4, 4,

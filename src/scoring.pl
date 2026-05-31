@@ -1,6 +1,3 @@
-:- include('player.pl').
-:- include('display.pl').
-
 /* Perhitungan Poin */
 hitungPoinHelper([], 0).
 hitungPoinHelper([kartu(_,Jenis)|Sisa], TotalPoin) :-

@@ -1,3 +1,9 @@
+:- include('state.pl').
+:- include('utils.pl').
+:- include('deck.pl').
+:- include('player.pl').
+:- include('turn.pl').
+:- include('display.pl').
 :- include('action.pl').
 :- include('scoring.pl').
 :- dynamic(gameRunning/1).
