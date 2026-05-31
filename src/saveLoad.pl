@@ -2,13 +2,12 @@
 
 saveGame :-
   write('Masukkan nama file penyimpanan: '), read(BaseName) , atom_concat(BaseName,'.txt', FileName), nl,
-  write(BaseName),
   open(FileName, write, Stream),
-  urutan_pemain(Urutan), format(Stream, 'urutanPemain(~q).~n', [Urutan]),
+  urutanPemain(Urutan), format(Stream, 'urutanPemain(~q).~n', [Urutan]),
   giliran(Giliran), format(Stream, 'giliran(~q).~n', [Giliran]),
-  discard_top(Top), format(Stream, 'discardTop(~q).~n', [Top]),
-  warna_aktif(Warna), format(Stream, 'warnaAktif(~q).~n', [Warna]),
-  arah_permainan(Arah), format(Stream, 'arahPermainan(~q).~n', [Arah]),
+  discardTop(Top), format(Stream, 'discardTop(~q).~n', [Top]),
+  warnaAktif(Warna), format(Stream, 'warnaAktif(~q).~n', [Warna]),
+  arahPermainan(Arah), format(Stream, 'arahPermainan(~q).~n', [Arah]),
   pemainUNI(PemainUni), format(Stream, 'uniStatus(~q).~n', [PemainUni]),
   writeSemuaKartuPemain(Urutan, Stream),
   close(Stream),

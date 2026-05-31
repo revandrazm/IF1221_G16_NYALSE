@@ -14,8 +14,6 @@ giliranSelanjutnya :-
     retract(giliran(PemainSekarang)),
     asserta(giliran(PemainBerikutnya)),
 
-    format('~nGiliran ~w.~n', [PemainBerikutnya]), !.
-
 giliranSebelumnya(Nama) :-
     giliran(PemainSekarang),
     urutanPemain(DaftarPemain),

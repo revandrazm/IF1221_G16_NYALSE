@@ -34,21 +34,30 @@ ambilKartu :-
     giliran(Pemain),
     kartuPemain(Pemain, DaftarKartuLama),
     discardTop(kartu(_, JenisDiscard)),
-    (   JenisDiscard == drawTwo         -> Jumlah = 2 ;
-        JenisDiscard == wildDrawFour    -> Jumlah = 4 ;
-        Jumlah = 1  ),
+    (   ancamanHukuman(true)    
+    ->  Jumlah = 4, 
+        retractall(ancamanHukuman(_)), 
+        asserta(ancamanHukuman(false)) 
+    ;   Jumlah = 1  
+    ),
     ambilSejumlahKartu(Jumlah, KartuBaru),
     h_ListAppendList(DaftarKartuLama, KartuBaru, DaftarKartuBaru),
     retract(kartuPemain(Pemain, DaftarKartuLama)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
     hapusStatusUni(Pemain),
-    format('Kartu ~w telah diperbarui. Kartu sekarang: ~w~n', [Pemain, DaftarKartuBaru]),
+    format('Kartu ~w telah diperbarui.~n', [Pemain]),
     giliranSelanjutnya.
 
 ambilSejumlahKartu(JumlahKartu, DaftarKartuTerpilih) :-
     deck(DeckAwal),
-    prosesAmbil(JumlahKartu, DeckAwal, DeckSisa, DaftarKartuTerpilih),
-    retract(deck(DeckAwal)),
+    h_ListLength(DeckAwal, JumlahDeck),
+    ( JumlahDeck < JumlahKartu 
+    -> reshuffleDeck
+    ; true
+    ),
+    deck(DeckBaru),
+    prosesAmbil(JumlahKartu, DeckBaru, DeckSisa, DaftarKartuTerpilih),
+    retract(deck(_)),
     asserta(deck(DeckSisa)).
 
 prosesAmbil(0, Deck, Deck, []) :- !.
@@ -56,6 +65,41 @@ prosesAmbil(JumlahKartu, [KartuTeratas|SisaDeckTersedia], DeckAkhir, [KartuTerat
     JumlahKartu > 0,
     JumlahSisa is JumlahKartu - 1,
     prosesAmbil(JumlahSisa, SisaDeckTersedia, DeckAkhir, SisaAmbilan).
+
+reshuffleDeck :-
+    write('Kartu deck habis! Sedang mengocok ulang tumpukan kartu'), nl,
+    deck(DeckSekarang),
+    discardTop(KartuTeratas),
+
+    loadKartu(DeckBaru),
+
+    kumpulkanSemuaKartuPemain(DaftarKartuTangan),
+    h_ListAppendElement(DaftarKartuTangan, KartuTeratas, KartuDiluarDeck),
+
+    kurangiDaftarKartu(DeckBaru, KartuDiluarDeck, DeckBaruLengkap),
+    h_ListAppendList(DeckBaruLengkap, DeckSekarang, DeckAkhir),
+
+    h_Shuffle(DeckAkhir, DeckAcak),
+    retract(deck(_)),
+    asserta(deck(DeckAcak)).
+
+kumpulkanSemuaKartuPemain(Hasil) :-
+    urutanPemain(DaftarPemain),
+    kumpulkanKartuPemain(DaftarPemain, [], Hasil).
+
+kumpulkanKartuPemain([], Akumulasi, Akumulasi).
+kumpulkanKartuPemain([Pemain|SisaPemain], Akumulasi, Hasil) :-
+    kartuPemain(Pemain, DaftarKartu),
+    h_ListAppendList(Akumulasi, DaftarKartu, DaftarKartuAkumulasi),
+    kumpulkanKartuPemain(SisaPemain, DaftarKartuAkumulasi, Hasil).
+
+kurangiDaftarKartu(Full, [], Full) :- !. 
+kurangiDaftarKartu(Full, [H|T], Sisa) :-
+    (   h_ListIndexOf(Full, H, Indeks )
+    ->  h_ListRemoveAtIndex(Full, Indeks, FullBaru)    
+    ;   FullBaru = Full
+    ),
+    kurangiDaftarKartu(FullBaru, T, Sisa).
 
 /* ===== UNI & TANGKAP ===== */
 /* Helpers */
@@ -82,10 +126,10 @@ uni(IndeksMentah):-
 	giliran(Pemain),
     kartuPemain(Pemain,DaftarKartu),
 	h_ListLength(DaftarKartu, 2),
+    Indeks is IndeksMentah - 1,
 	h_ListGetElement(DaftarKartu, Indeks, Kartu),
     kartuMainValid(Kartu),
 	!,
-    Indeks is IndeksMentah - 1,
 	h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
 	retract(kartuPemain(Pemain, _)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
@@ -135,7 +179,7 @@ tangkap(_) :-
     kartuPemain(Pemanggil, DaftarKartuLama),
     h_ListAppendList(DaftarKartuLama, KartuPenalti, DaftarKartuBaru),
     retract(kartuPemain(Pemanggil, _)),
-    asserta(kartuPemain(Pemanggil, DaftarKartuBaru)).
+    asserta(kartuPemain(Pemanggil, DaftarKartuBaru)),
     giliranSelanjutnya, !.
 
 /* Tantang berhasil */
@@ -154,7 +198,8 @@ tantang :-
     h_ListAppendList(DaftarKartuPemainSebelumnya, KartuHukuman, DaftarKartuBaru),
     retract(kartuPemain(PemainSebelumnya, _)),
     assertz(kartuPemain(PemainSebelumnya, DaftarKartuBaru)),
-	giliranSelanjutnya.
+    retractall(ancamanHukuman(_)), 
+    asserta(ancamanHukuman(false)).
 
 /* Tantang gagal */
 tantang :-
@@ -173,6 +218,8 @@ tantang :-
     h_ListAppendList(DaftarKartuPemainSekarang, KartuHukuman, DaftarKartuBaru),
     retract(kartuPemain(PemainSekarang, _)),
     assertz(kartuPemain(PemainSekarang, DaftarKartuBaru)),
+    retractall(ancamanHukuman(_)), 
+    asserta(ancamanHukuman(false)),
     giliranSelanjutnya.
 
 /* Tantang invalid */

@@ -5,7 +5,7 @@ hukumAmbilKartu(Pemain, Jumlah) :-
     retract(kartuPemain(Pemain, DaftarKartuLama)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
     hapusStatusUni(Pemain),
-    format('~w mendapat ~w kartu hukuman.~n', [Pemain, Jumalh]).
+    format('~w mendapat ~w kartu hukuman.~n', [Pemain, Jumlah]).
 
 aplikasiEfek(skip) :-
     giliranSelanjutnya,
@@ -36,13 +36,12 @@ aplikasiEfek(drawTwo) :-
 aplikasiEfek(wild) :-
     write('Pilih warna (gunakan pilihWarna(Warna))'),
     retract(memilihWarna(false)),
-    asserta(memilihWarna(true)).
+    asserta(memilihWarna(true)), !.
 
 aplikasiEfek(wildDrawFour) :-
-    giliranSelanjutnya,
-    giliran(Korban),
-    hukumAmbilKartu(Korban, 4),
-    giliranSelanjutnya, !.
+    write('Pilih warna (gunakan pilihWarna(Warna))'),
+    retract(memilihWarna(false)),
+    asserta(memilihWarna(true)), !.
 
 aplikasiEfek(_) :-
     giliranSelanjutnya, !.
@@ -50,13 +49,15 @@ aplikasiEfek(_) :-
 pilihWarna(Warna) :-
     memilihWarna(true), !,
     (   cekWarnaValid(Warna)
-    ->  retract(memilihWarna(true)),
+    ->  retractall(memilihWarna(true)),
         asserta(memilihWarna(false)),
 
-        retract(warnaAktif(_)),
+        retractall(warnaAktif(_)),
         asserta(warnaAktif(Warna)),
 
         format('Berhasil! Warna permainan sekarang menjadi ~w.~n', [Warna]), nl,
+        discardTop(kartu(_, Jenis)),
+        ( Jenis == wildDrawFour -> retractall(ancamanHukuman(_)), asserta(ancamanHukuman(true)) ; true ),
         giliranSelanjutnya
     ;   write('Warna tidak valid! Silakan pilih: merah, kuning, hijau, atau biru.'), nl
     ).
