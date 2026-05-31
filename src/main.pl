@@ -59,7 +59,6 @@ startGame :-
 
     giliran(PemainAktif),
     nl, write('[i] Set up selesai! Permainan dimulai!'), nl,
-    nl, write('[i] Tekan titik (.) lalu enter untuk memulai...'), read(_),
     cls,
     nl,
     write('==========================================='), nl,
@@ -170,7 +169,6 @@ jalankanPerintah(loadGame, _) :-
     !,
     loadGame,
     giliran(PemainAktif),
-    nl, write('[i] Tekan titik (.) lalu enter untuk melanjutkan game yang dimuat...'), read(_),
     cls,
     nl,
     write('==========================================='), nl,

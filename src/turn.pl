@@ -14,7 +14,6 @@ giliranSelanjutnya :-
     retract(giliran(PemainSekarang)),
     asserta(giliran(PemainBerikutnya)),
 
-    nl, write('[i] Tekan titik (.) lalu enter untuk ke giliran berikutnya...'), read(_),
     cls,
 
     nl,
