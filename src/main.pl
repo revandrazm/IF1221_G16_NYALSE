@@ -19,7 +19,10 @@ startGame :-
     retractall(urutanPemain(_)),
     retractall(discardTop(_)),
     retractall(warnaAktif(_)),
+    retractall(memilihWarna(_)),
+
     assertz(gameRunning(true)),
+    assertz(memilihWarna(false)),
 
     randomize,
 
@@ -71,33 +74,69 @@ playerTurnLoop(Pemain) :-
     jalankanPerintah(Perintah, Pemain).
 
 
-jalankanPerintah(mainkanKartu(Indeks), _) :-
-    !, mainkanKartu(Indeks).
+jalankanPerintah(mainkanKartu(Indeks), Pemain) :-
+    !, 
+    (   mainkanKartu(Indeks) 
+    ->  true 
+    ;   playerTurnLoop(Pemain)
+    ).
 
-jalankanPerintah(ambilKartu, _) :-
-    !, ambilKartu.
+jalankanPerintah(ambilKartu, Pemain) :-
+    !,
+    ( ambilKartu 
+    ->  true 
+    ;   write('Gagal mengambil kartu.'), nl, 
+        playerTurnLoop(Pemain)
+    ).
 
-jalankanPerintah(tantang, _) :-
-    !, tantang.
-jalankanPerintah(uni(N), _) :-
-    !, uni(N).
+jalankanPerintah(tantang, Pemain) :-
+    !,
+    (   tantang 
+    ->  true 
+    ;   playerTurnLoop(Pemain)
+    ).
+
+jalankanPerintah(uni(N), Pemain) :-
+    !,
+    (   uni(N) 
+    ->  true 
+    ;   playerTurnLoop(Pemain)
+    ).
+
+jalankanPerintah(pilihWarna(Warna), Pemain) :-
+    !,
+    (   pilihWarna(Warna) 
+    ->  true
+    ;   playerTurnLoop(Pemain)
+    ).
 
 jalankanPerintah(lihatCommand, Pemain) :-
     !, lihatCommand,
     playerTurnLoop(Pemain).
+
 jalankanPerintah(lihatKartu, Pemain) :-
     !, lihatKartu,
     playerTurnLoop(Pemain).
+
 jalankanPerintah(cekInfo, Pemain) :-
     !, cekInfo,
     playerTurnLoop(Pemain).
-jalankanPerintah(tangkap, Pemain) :-
-    !, tangkap,
+
+jalankanPerintah(tangkap(Target), Pemain) :-
+    !, tangkap(Target),
     playerTurnLoop(Pemain).
 
-jalankanPerintah(saveGame, sistem).
-jalankanPerintah(loadGame, sistem).
+jalankanPerintah(saveGame, sistem) :-
+    !,
+    write('Fitur saveGame belum diimplementasi.'), nl,
+    playerTurnLoop(Pemain).
+
+jalankanPerintah(loadGame, sistem) :-
+    !,
+    write('Fitur loadGame belum diimplementasi.'), nl,
+    playerTurnLoop(Pemain).
 
 jalankanPerintah(_, Pemain) :-
-    write('Perintah tidak dikenali atau format salah. Ketik lihatCommand untuk melihat perintah yang tersedia.'), nl,
+    write('Perintah tidak dikenali atau format salah.'), nl,
+    write('Ketik lihatCommand untuk melihat perintah yang tersedia.'), nl,
     playerTurnLoop(Pemain).

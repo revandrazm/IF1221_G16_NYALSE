@@ -9,7 +9,7 @@ kartuHitam([kartu(hitam, wild), kartu(hitam, wild),
             kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour)]).
 
 /* Nilai Kartu */
-nilaiKartu(0, 0).
+nilaiKartu(0, 1).
 nilaiKartu(1, 1).
 nilaiKartu(2, 2).
 nilaiKartu(3, 3).
@@ -55,7 +55,7 @@ initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
     SisaAkhir = Sisa,
     assertz(discardTop(kartu(Warna, Jenis))),
     assertz(warnaAktif(Warna)),
-    write('Kartu awal di discard pile: '), h_FormatCard(kartu(Warna, Jenis)), nl.
+    nl, write('Kartu awal di discard pile: '), h_FormatCard(kartu(Warna, Jenis)), nl.
 initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
     h_ListLength(Sisa, Panjang),
     random(0, Panjang, Indeks),

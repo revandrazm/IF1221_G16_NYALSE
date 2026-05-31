@@ -1,21 +1,37 @@
+hukumAmbilKartu(Pemain, Jumlah) :-
+    kartuPemain(Pemain, DaftarKartuLama),
+    ambilSejumlahKartu(Jumlah, KartuBaru),
+    h_ListAppendList(DaftarKartuLama, KartuBaru, DaftarKartuBaru),
+    retract(kartuPemain(Pemain, DaftarKartuLama)),
+    asserta(kartuPemain(Pemain, DaftarKartuBaru)),
+    hapusStatusUni(Pemain),
+    format('~w mendapat ~w kartu hukuman.~n', [Pemain, DaftarKartuBaru]).
+
 aplikasiEfek(skip) :-
     giliranSelanjutnya,
+    giliran(Korban),
+    format('~w kehilangan giliran~n', [Korban]),
     giliranSelanjutnya, !.
 
 aplikasiEfek(reverse) :-
     arahPermainan(ArahAwal),
 
-    (ArahAwal == kanan ->
-     ArahBaru = kiri ;
-     ArahBaru = kanan),
+    (   ArahAwal == kanan 
+    ->  ArahBaru = kiri 
+    ;   ArahBaru = kanan
+    ),
 
     retract(arahPermainan(ArahAwal)),
     asserta(arahPermainan(ArahBaru)),
+
+    format('Arah permainan dibalik menjadi ke arah ~w!~n', [ArahBaru]),
     giliranSelanjutnya, !.
 
 aplikasiEfek(drawTwo) :-
     giliranSelanjutnya,
-    ambilKartu, !.
+    giliran(Korban),
+    hukumAmbilKartu(Korban, 2),
+    giliranSelanjutnya, !. 
 
 aplikasiEfek(wild) :-
     write('Pilih warna (gunakan pilihWarna(Warna))'),
