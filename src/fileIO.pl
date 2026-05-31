@@ -1,3 +1,5 @@
+:- include('utils.pl').
+
 saveGame :-
   write('[?] Masukkan nama file penyimpanan: '), read(BaseName), 
   name(BaseName, BaseString), name('.txt', ExtString), insertTail(BaseString, ExtString, FileString), name(FileName, FileString), nl,
@@ -16,7 +18,7 @@ saveGame :-
 loadGame :-
   write('[?] Masukkan nama file penyimpanan: '), read(BaseName),
   name(BaseName, BaseString), name('.txt', ExtString), insertTail(BaseString, ExtString, FileString), name(FileName, FileString), nl,
-  open(FileName, read, Stream),
+  (catch(open(FileName, read, Stream), _, fail) ->
   read(Stream, Urutan), retractall(urutanPemain(_)), asserta(Urutan),
   read(Stream, Giliran), retractall(giliran(_)), asserta(Giliran),
   read(Stream, Top), retractall(discardTop(_)), asserta(Top),
@@ -25,9 +27,10 @@ loadGame :-
   read(Stream, PemainUni), retractall(uniStatus(_)), asserta(PemainUni),
   loadKartuPemain(Stream),
 
-  format('[i] Status permainan berhasil dimuat dari ~w.~n', [FileName]).
-
-loadKartuPemain(Stream) :- urutanPemain(Urutan), loadKartuPemain(Stream, Urutan).
+  format('[i] Status permainan berhasil dimuat dari ~w.~n', [FileName]),
+  close(Stream);
+  format('[!] File ~w tidak ada!~n', [FileName])
+  ).
 loadKartuPemain(_Stream, []).
 loadKartuPemain(Stream, [H|T]) :- read(Stream, KartuPemain), retractall(kartuPemain(H,_)), asserta(KartuPemain), loadKartuPemain(Stream, T).
 
