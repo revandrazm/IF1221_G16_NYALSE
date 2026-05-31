@@ -5,7 +5,16 @@ tarikKartu(Pemain, Jumlah) :-
     h_ListAppendList(DaftarKartuLama, KartuBaru, DaftarKartuBaru),
     retract(kartuPemain(Pemain, _)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
-    hapusStatusUni(Pemain).
+    hapusStatusUni(Pemain),
+    format('[i] ~w mengambil ~w kartu: ', [Pemain, Jumlah]),
+    cetakKartuDitarik(KartuBaru).
+
+cetakKartuDitarik([]) :- nl.
+cetakKartuDitarik([Kartu]) :-
+    h_FormatCard(Kartu), nl, !.
+cetakKartuDitarik([Kartu|Sisa]) :-
+    h_FormatCard(Kartu), write(', '),
+    cetakKartuDitarik(Sisa).
 
 mainkanKartu(IndeksMentah) :-
     giliran(Pemain),
@@ -50,12 +59,11 @@ ambilKartu :-
     (   ancamanHukuman(true)
     ->  Jumlah = 4,
         retractall(ancamanHukuman(_)),
-        asserta(ancamanHukuman(false))
-    ;   Jumlah = 1
-    ),
-    tarikKartu(Pemain, Jumlah),
-    format('[i] Kartu ~w telah diperbarui.~n', [Pemain]),
-    giliranSelanjutnya.
+        asserta(ancamanHukuman(false)) 
+        ;   Jumlah = 1  
+        ),
+        tarikKartu(Pemain, Jumlah),
+        giliranSelanjutnya.
 
 ambilSejumlahKartu(JumlahKartu, DaftarKartuTerpilih) :-
     deck(DeckAwal),
