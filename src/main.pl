@@ -3,7 +3,7 @@
 :- include('deck.pl').
 :- include('player.pl').
 :- include('turn.pl').
-:- include('efek.pl').
+:- include('effects.pl').
 :- include('rule.pl').
 :- include('display.pl').
 :- include('action.pl').
@@ -57,7 +57,7 @@ inputJumlahPemain(N):-
     nl.
 
 gameLoop :-
-    cekGameOver(Pemenang), !,
+    cekGameOver(_), !,
     endGame.
 
 gameLoop :-
