@@ -5,22 +5,34 @@ mainkanKartu(Indeks) :-
     giliran(Pemain),
     kartuPemain(Pemain, DaftarKartu),
     h_ListLength(DaftarKartu, JumlahKartu),
-    1 =< Indeks, Indeks =< JumlahKartu,
-    IndeksNormal is Indeks-1,
-    h_ListAtIndex(DaftarKartu, IndeksNormal, Kartu),
-    kartuMainValid(Kartu),
-    h_ListRemoveAtIndex(DaftarKartu, IndeksNormal, DaftarKartuBaru),
-    retract(kartuPemain(Pemain, _)),
-    asserta(kartuPemain(Pemain, DaftarKartuBaru)),
-    retract(discardTop(_)),
-    asserta(discardTop(Kartu)),
-    Kartu = kartu(Warna, _),
-    h_ListLength(DaftarKartuBaru, SisaKartu),
-    (SisaKartu \= 1 -> hapusStatusUni(Pemain) ; true),
-    (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
-    format('~w memainkan kartu: ', [Pemain]),
-    h_FormatCard(Kartu), write('.'), nl,
-    giliranSelanjutnya, !.
+    /* Validasi Indeks */
+    (	1 =< Indeks, Indeks =< JumlahKartu
+    	->
+     	IndeksNormal is Indeks-1,
+     	h_ListAtIndex(DaftarKartu, IndeksNormal, Kartu),
+
+      /* Validasi Kartu */
+      (	kartuMainValid(Kartu)
+      	->
+		    h_ListRemoveAtIndex(DaftarKartu, IndeksNormal, DaftarKartuBaru),
+		    retract(kartuPemain(Pemain, _)),
+		    asserta(kartuPemain(Pemain, DaftarKartuBaru)),
+		    retract(discardTop(_)),
+		    asserta(discardTop(Kartu)),
+		    Kartu = kartu(Warna, _),
+		    h_ListLength(DaftarKartuBaru, SisaKartu),
+		    (SisaKartu \= 1 -> hapusStatusUni(Pemain) ; true),
+		    (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
+		    cls,
+		    format('~w memainkan kartu: ', [Pemain]),
+		    h_FormatCard(Kartu), write('.'), nl,
+		    giliranSelanjutnya, !
+			;
+				write('WARNING: Kartu '), h_FormatCard(Kartu), write(' tidak valid!'), !
+			)
+		;
+			format('WARNING: Indeks ~w tidak valid!~nIndeks Valid: [1-~w]',[Indeks,JumlahKartu]), !
+		).
 
 ambilKartu :-
     giliran(Pemain),
