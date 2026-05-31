@@ -57,7 +57,7 @@ inputJumlahPemain(N):-
     nl.
 
 gameLoop :-
-    cekGameOver(Pemenang), !,
+    cekGameOver(_), !,
     endGame.
 
 gameLoop :-
