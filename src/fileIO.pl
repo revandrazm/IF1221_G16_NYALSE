@@ -45,6 +45,8 @@ loadGame :-
   close(Stream);
   format('[!] File ~w tidak ada!~n', [FileName])
   ).
+
+loadKartuPemain(Stream) :- urutanPemain(Urutan), loadKartuPemain(Stream, Urutan).
 loadKartuPemain(_Stream, []).
 loadKartuPemain(Stream, [H|T]) :- read(Stream, KartuPemain), retractall(kartuPemain(H,_)), asserta(KartuPemain), loadKartuPemain(Stream, T).
 
