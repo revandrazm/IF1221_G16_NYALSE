@@ -126,12 +126,12 @@ jalankanPerintah(tangkap(Target), Pemain) :-
     !, tangkap(Target),
     playerTurnLoop(Pemain).
 
-jalankanPerintah(saveGame, sistem) :-
+jalankanPerintah(saveGame, Pemain) :-
     !,
     write('Fitur saveGame belum diimplementasi.'), nl,
     playerTurnLoop(Pemain).
 
-jalankanPerintah(loadGame, sistem) :-
+jalankanPerintah(loadGame, Pemain) :-
     !,
     write('Fitur loadGame belum diimplementasi.'), nl,
     playerTurnLoop(Pemain).

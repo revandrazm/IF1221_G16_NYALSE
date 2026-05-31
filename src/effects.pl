@@ -5,7 +5,7 @@ hukumAmbilKartu(Pemain, Jumlah) :-
     retract(kartuPemain(Pemain, DaftarKartuLama)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
     hapusStatusUni(Pemain),
-    format('~w mendapat ~w kartu hukuman.~n', [Pemain, DaftarKartuBaru]).
+    format('~w mendapat ~w kartu hukuman.~n', [Pemain, Jumalh]).
 
 aplikasiEfek(skip) :-
     giliranSelanjutnya,
@@ -40,7 +40,8 @@ aplikasiEfek(wild) :-
 
 aplikasiEfek(wildDrawFour) :-
     giliranSelanjutnya,
-    ambilKartu,
+    giliran(Korban),
+    hukumAmbilKartu(Korban, 4),
     giliranSelanjutnya, !.
 
 aplikasiEfek(_) :-
