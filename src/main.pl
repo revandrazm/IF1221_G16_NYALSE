@@ -12,7 +12,6 @@
 
 startGame :-
     cls,
-    retractall(gameRunning(_)),
     retractall(deck(_)),
     retractall(arahPermainan(_)),
     retractall(uniStatus(_)),
@@ -22,8 +21,8 @@ startGame :-
     retractall(discardTop(_)),
     retractall(warnaAktif(_)),
     retractall(memilihWarna(_)),
+    retractall(ancamanHukuman(_)),
 
-    assertz(gameRunning(true)),
     assertz(memilihWarna(false)),
 
     randomize,
