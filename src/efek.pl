@@ -1,7 +1,3 @@
-:- include('state.pl').
-:- include('turn.pl').
-:- include('rule.pl').
-
 aplikasiEfek(skip) :-
     giliranSelanjutnya,
     giliranSelanjutnya, !.
@@ -19,13 +15,20 @@ aplikasiEfek(reverse) :-
 
 aplikasiEfek(drawTwo) :-
     giliranSelanjutnya,
-    ambilKartu,
-    giliranSelanjutnya, !.
+    ambilKartu, !.
 
 aplikasiEfek(wild) :-
     write('Pilih warna (gunakan pilihWarna(Warna))'),
     retract(memilihWarna(false)),
     asserta(memilihWarna(true)).
+
+aplikasiEfek(wildDrawFour) :-
+    giliranSelanjutnya,
+    ambilKartu,
+    giliranSelanjutnya, !.
+
+aplikasiEfek(_) :-
+    giliranSelanjutnya, !.
 
 pilihWarna(Warna) :-
     memilihWarna(true), !,
@@ -43,11 +46,3 @@ pilihWarna(Warna) :-
 
 pilihWarna(_) :-
     write('Anda tidak sedang dalam fase memilih warna!'), nl.
-
-aplikasiEfek(wildDrawFour) :-
-    giliranSelanjutnya,
-    ambilKartu,
-    giliranSelanjutnya, !.
-
-aplikasiEfek(_) :-
-    giliranSelanjutnya, !.
