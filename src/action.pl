@@ -1,7 +1,3 @@
-:- include('turn.pl').
-:- include('rule.pl').
-:- include('efek.pl').
-
 /* ===== AKSI UTAMA ===== */
 mainkanKartu(IndeksMentah) :-
     giliran(Pemain),
