@@ -9,7 +9,6 @@
 :- dynamic(uniStatus/1).			  % List pemain yg sudah uni
 :- dynamic(memilihWarna/1).     % Status dapat menggunakan pilihWarna (true/false)
 :- dynamic(ancamanHukuman/1).
-:- dynamic(discardPile).
 :- dynamic(gameRunning/1).
 
 /* Bonus */

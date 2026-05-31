@@ -22,14 +22,16 @@ daftarAksiPendukung([lihatCommand, lihatKartu, cekInfo]).
 lihatCommand :-
     daftarAksiUtamaKontekstual(DaftarUtama),
     daftarAksiPendukung(DaftarPendukung),
-    write('Aksi utama yang tersedia:'), nl,
+    nl, write('================[ DAFTAR PERINTAH ]================'), nl,
+    write(' [i] Aksi Utama (Mengakhiri Giliran):'), nl,
     printList(DaftarUtama, 1), nl,
-    write('Aksi pendukung yang tersedia:'), nl,
-    printList(DaftarPendukung, 1), !.
+    write(' [i] Aksi Pendukung:'), nl,
+    printList(DaftarPendukung, 1),
+    write('==================================================='), nl, !.
 
 printList([], _).
 printList([H|T], N) :-
-    format('~w. ~w~n', [N, H]),
+    format('     ~w. ~w~n', [N, H]),
     NBerikutnya is N + 1,
     printList(T, NBerikutnya).
 
@@ -57,10 +59,11 @@ formatUrutan([H|T]):-
 
 printUrutan([], _) :- !.
 printUrutan([H|T], N):-
-	format('Nama pemain ~d: ~w', [N, H]), nl,
+	format(' [i] Nama pemain ~d: ~w', [N, H]), nl,
 	kartuPemain(H, DaftarKartu),
 	h_ListLength(DaftarKartu, JumlahKartu),
-	format('Jumlah kartu: ~d', [JumlahKartu]), nl, nl,
+	format('     Jumlah kartu: ~d', [JumlahKartu]), nl,
+	( T \= [] -> nl ; true ),
 	NBerikutnya is N + 1,
 	printUrutan(T, NBerikutnya).
 
@@ -68,15 +71,26 @@ printUrutan([H|T], N):-
 lihatKartu :-
 	giliran(Player),
 	kartuPemain(Player, DaftarKartu), nl,
-	write('Berikut kartu yang anda miliki'), nl,
-	lihatKartu(DaftarKartu, 1).
+	write('================[ KARTU ANDA ]================'), nl,
+	lihatKartu(DaftarKartu, 1),
+    write('=============================================='), nl.
 
 cekInfo :-
 	discardTop(KartuTeratas),
 	urutanPemain(Urutan),
-	write('Kartu discard top: '), h_FormatCard(KartuTeratas), nl, nl,
-	write('Urutan pemain: '), formatUrutan(Urutan), nl, nl,
-	printUrutan(Urutan, 1).
+    warnaAktif(WarnaAktif),
+    arahPermainan(Arah),
+    giliran(PemainAktif),
+    nl,
+    write('================[ STATUS GAME ]================'), nl,
+	format(' [i] Kartu Teratas  : ', []), h_FormatCard(KartuTeratas), nl,
+    format(' [i] Warna Aktif    : ~w~n', [WarnaAktif]),
+    format(' [i] Arah Permainan : ~w~n', [Arah]),
+    format(' [i] Giliran Saat Ini: ~w~n', [PemainAktif]),
+    write('-----------------------------------------------'), nl,
+	write(' [i] Daftar Pemain & Jumlah Kartu:'), nl,
+	printUrutan(Urutan, 1),
+    write('==============================================='), nl.
 
 /* Menampilkan Kartu dalam Format Penjumlahan */
 printKartu([Kartu]) :-
@@ -102,11 +116,11 @@ printPoin([kartu(_, Jenis)|Sisa]) :-
 printSkor([]) :- !.
 printSkor([(Pemain, Poin)|Sisa]) :-
     kartuPemain(Pemain, []), !,
-    format('~w: kartu habis = ~w poin~n', [Pemain, Poin]),
+    format(' - ~w: kartu habis = ~w poin~n', [Pemain, Poin]),
     printSkor(Sisa).
 printSkor([(Pemain, Poin)|Sisa]) :-
     kartuPemain(Pemain, DaftarKartu),
-    format('~w: ', [Pemain]),
+    format(' - ~w: ', [Pemain]),
     printKartu(DaftarKartu),
     printPoin(DaftarKartu),
     format('~w poin~n', [Poin]),
@@ -114,14 +128,14 @@ printSkor([(Pemain, Poin)|Sisa]) :-
 
 printPeringkat([], _) :- !.
 printPeringkat([(Pemain, Poin)|Sisa], Peringkat) :-
-    format('~w. ~w (~w Poin)~n', [Peringkat, Pemain, Poin]),
+    format('   ~w. ~w (~w Poin)~n', [Peringkat, Pemain, Poin]),
     PeringkatSelanjutnya is Peringkat + 1,
     printPeringkat(Sisa, PeringkatSelanjutnya).
 
 printUrutanAwal:-
     nl,
     urutanPemain(DaftarPemain),
-    write('Urutan pemain: '),
+    write('[i] Urutan pemain: '),
     cetakDaftarUrutanPemain(DaftarPemain),
     nl.
 

@@ -14,6 +14,14 @@ giliranSelanjutnya :-
     retract(giliran(PemainSekarang)),
     asserta(giliran(PemainBerikutnya)),
 
+    nl, write('[i] Tekan titik (.) lalu enter untuk ke giliran berikutnya...'), read(_),
+    cls,
+
+    nl,
+    write('==========================================='), nl,
+    format('          GILIRAN: ~w~n', [PemainBerikutnya]),
+    write('==========================================='), nl, !.
+
 giliranSebelumnya(Nama) :-
     giliran(PemainSekarang),
     urutanPemain(DaftarPemain),

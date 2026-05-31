@@ -1,4 +1,12 @@
-/* ===== AKSI UTAMA ===== */
+/* Helper untuk menarik N kartu ke tangan pemain */
+tarikKartu(Pemain, Jumlah) :-
+    kartuPemain(Pemain, DaftarKartuLama),
+    ambilSejumlahKartu(Jumlah, KartuBaru),
+    h_ListAppendList(DaftarKartuLama, KartuBaru, DaftarKartuBaru),
+    retract(kartuPemain(Pemain, _)),
+    asserta(kartuPemain(Pemain, DaftarKartuBaru)),
+    hapusStatusUni(Pemain).
+
 mainkanKartu(IndeksMentah) :-
     giliran(Pemain),
     kartuPemain(Pemain, DaftarKartu),
@@ -6,12 +14,13 @@ mainkanKartu(IndeksMentah) :-
 
     Indeks is IndeksMentah - 1,
     (   (Indeks < 0; Indeks >= JumlahKartu)
-    ->  write('Indeks kartu di luar jangkauan tanganmu!'), nl,
+    ->  write('[!] Indeks kartu di luar jangkauan tanganmu!'), nl,
         fail
     ;
         h_ListAtIndex(DaftarKartu, Indeks, Kartu),
         (   \+ kartuMainValid(Kartu)
-        ->  write('Kesalahan: Kartu tersebut tidak valid untuk meja saat ini!'), nl,
+        ->  warnaAktif(WarnaAktif), discardTop(kartu(_, JenisDiscard)),
+            format('[!] Kartu tidak cocok! (Warna aktif: ~w, Jenis di meja: ~w)~n', [WarnaAktif, JenisDiscard]),
             fail
         ;
             h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
@@ -23,8 +32,8 @@ mainkanKartu(IndeksMentah) :-
             h_ListLength(DaftarKartuBaru, SisaKartu),
             (SisaKartu \= 1 -> hapusStatusUni(Pemain) ; true),
             (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
-            format('~w memainkan kartu: ', [Pemain]),
-            h_FormatCard(Kartu), write('.'), nl,
+            format('[>] ~w memainkan kartu: [ ', [Pemain]),
+            h_FormatCard(Kartu), write(' ]'), nl,
 
             aplikasiEfek(EfekSetelah)
         )
@@ -32,20 +41,14 @@ mainkanKartu(IndeksMentah) :-
 
 ambilKartu :-
     giliran(Pemain),
-    kartuPemain(Pemain, DaftarKartuLama),
-    discardTop(kartu(_, JenisDiscard)),
     (   ancamanHukuman(true)    
     ->  Jumlah = 4, 
         retractall(ancamanHukuman(_)), 
         asserta(ancamanHukuman(false)) 
     ;   Jumlah = 1  
     ),
-    ambilSejumlahKartu(Jumlah, KartuBaru),
-    h_ListAppendList(DaftarKartuLama, KartuBaru, DaftarKartuBaru),
-    retract(kartuPemain(Pemain, DaftarKartuLama)),
-    asserta(kartuPemain(Pemain, DaftarKartuBaru)),
-    hapusStatusUni(Pemain),
-    format('Kartu ~w telah diperbarui.~n', [Pemain]),
+    tarikKartu(Pemain, Jumlah),
+    format('[i] Kartu ~w telah diperbarui.~n', [Pemain]),
     giliranSelanjutnya.
 
 ambilSejumlahKartu(JumlahKartu, DaftarKartuTerpilih) :-
@@ -67,7 +70,7 @@ prosesAmbil(JumlahKartu, [KartuTeratas|SisaDeckTersedia], DeckAkhir, [KartuTerat
     prosesAmbil(JumlahSisa, SisaDeckTersedia, DeckAkhir, SisaAmbilan).
 
 reshuffleDeck :-
-    write('Kartu deck habis! Sedang mengocok ulang tumpukan kartu'), nl,
+    write('[i] Kartu deck habis! Sedang mengocok ulang tumpukan kartu'), nl,
     deck(DeckSekarang),
     discardTop(KartuTeratas),
 
@@ -101,7 +104,6 @@ kurangiDaftarKartu(Full, [H|T], Sisa) :-
     ),
     kurangiDaftarKartu(FullBaru, T, Sisa).
 
-/* ===== UNI & TANGKAP ===== */
 /* Helpers */
 tambahStatusUni(Pemain) :-
 	uniStatus(DaftarUni),
@@ -135,21 +137,19 @@ uni(IndeksMentah):-
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
 	retract(discardTop(_)),
     asserta(discardTop(Kartu)),
+    Kartu = kartu(Warna, EfekSetelah),
+    (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
 	tambahStatusUni(Pemain),
-	format('~w memainkan kartu: ',[Pemain]),
-    h_FormatCard(Kartu), write('.'), nl,
-	format('~w menyerukan UNI!', [Pemain]), nl,
-	giliranSelanjutnya.
+	format('[>] ~w memainkan kartu: [ ',[Pemain]),
+    h_FormatCard(Kartu), write(' ]'), nl,
+	format('[!] *** ~w MENYERUKAN UNI!!! ***', [Pemain]), nl,
+	aplikasiEfek(EfekSetelah).
 
 /* Uni Invalid */
 uni(_) :-
 	giliran(Pemain),
-	format('Perintah uni tidak valid! ~w mendapat 1 kartu penalti.', [Pemain]), nl,
-	ambilSejumlahKartu(1, KartuPenalti),
-	kartuPemain(Pemain, DaftarKartuLama),
-	h_ListAppendList(DaftarKartuLama, KartuPenalti, DaftarKartuBaru),
-	retract(kartuPemain(Pemain, _)),
-	asserta(kartuPemain(Pemain, DaftarKartuBaru)),
+	format('[!] Perintah uni tidak valid! ~w mendapat 1 kartu penalti.', [Pemain]), nl,
+	tarikKartu(Pemain, 1),
     giliranSelanjutnya, !.
 
 /* Tangkap Valid */
@@ -161,67 +161,55 @@ tangkap(Target) :-
     uniStatus(DaftarUni),
     \+ h_ListIsMember(Target, DaftarUni),
     !,
-    format('~w tertangkap tidak menyerukan UNI.', [Target]), nl,
-    format('~w mendapatkan 2 kartu penalti.', [Target]), nl,
-    format('Giliran ~w.', [Pemanggil]),
-    ambilSejumlahKartu(2, KartuPenalti),
-    h_ListAppendList(DaftarKartuTarget, KartuPenalti, DaftarKartuBaru),
-    retract(kartuPemain(Target, _)),
-    asserta(kartuPemain(Target, DaftarKartuBaru)),
+    format('[!] ~w TERTANGKAP! Lupa menyerukan UNI.', [Target]), nl,
+    format('[i] ~w terpaksa mengambil 2 kartu penalti.', [Target]), nl,
+    format('[i] Giliran tetap pada ~w.', [Pemanggil]),
+    tarikKartu(Target, 2),
     giliranSelanjutnya.
 
 /* Tangkap Invalid*/
 tangkap(_) :-
     giliran(Pemanggil),
-    write('Perintah tangkap tidak valid. '),
-    format('~w mendapatkan 1 kartu penalti.', [Pemanggil]), nl,
-    ambilSejumlahKartu(1, KartuPenalti),
-    kartuPemain(Pemanggil, DaftarKartuLama),
-    h_ListAppendList(DaftarKartuLama, KartuPenalti, DaftarKartuBaru),
-    retract(kartuPemain(Pemanggil, _)),
-    asserta(kartuPemain(Pemanggil, DaftarKartuBaru)),
+    write('[!] Perintah tangkap tidak valid. '),
+    format('[i] ~w mendapatkan 1 kartu penalti.', [Pemanggil]), nl,
+    tarikKartu(Pemanggil, 1),
     giliranSelanjutnya, !.
 
 /* Tantang berhasil */
 tantang :-
     discardTop(kartu(hitam, wildDrawFour)),
     giliranSebelumnya(PemainSebelumnya),
-    kartuPemain(PemainSebelumnya, DaftarKartuPemainSebelumnya),
     \+ canPlayWildDrawFour(PemainSebelumnya),
     !,
 
-    write('Tantangan dilakukan'), nl,
-    format('Memeriksa kartu ~w~n', [PemainSebelumnya]),
-    format('Tantangan berhasil. ~w menerima hukuman mendapatkan 4 kartu acak~n', [PemainSebelumnya]),
+    write('[i] Tantangan dilakukan'), nl,
+    format('[i] Memeriksa kartu ~w...~n', [PemainSebelumnya]),
+    format('[i] Tantangan BERHASIL! ~w ketahuan melakukan bluffing.~n', [PemainSebelumnya]), 
+    format('[i] ~w terpaksa mengambil 4 kartu penalti.~n', [PemainSebelumnya]),
 
-    ambilSejumlahKartu(4, KartuHukuman),
-    h_ListAppendList(DaftarKartuPemainSebelumnya, KartuHukuman, DaftarKartuBaru),
-    retract(kartuPemain(PemainSebelumnya, _)),
-    assertz(kartuPemain(PemainSebelumnya, DaftarKartuBaru)),
+    tarikKartu(PemainSebelumnya, 4),
     retractall(ancamanHukuman(_)), 
-    asserta(ancamanHukuman(false)).
+    asserta(ancamanHukuman(false)),
+    giliranSelanjutnya.
 
 /* Tantang gagal */
 tantang :-
     discardTop(kartu(hitam, wildDrawFour)),
     giliran(PemainSekarang),
-    kartuPemain(PemainSekarang, DaftarKartuPemainSekarang),
     giliranSebelumnya(PemainSebelumnya),
     canPlayWildDrawFour(PemainSebelumnya),
     !,
 
-    write('Tantangan dilakukan'), nl,
-    format('Memeriksa kartu ~w~n', [PemainSebelumnya]),
-    format('Tantangan gagal. ~w mendapatkan 6 kartu acak~n', [PemainSekarang]),
+    write('[i] Tantangan dilakukan'), nl,
+    format('[i] Memeriksa kartu ~w...~n', [PemainSebelumnya]),
+    format('[i] Tantangan GAGAL! ~w terbukti jujur.~n', [PemainSebelumnya]), 
+    format('[i] ~w terkena penalti tambahan dan mengambil 6 kartu.~n', [PemainSekarang]),
 
-    ambilSejumlahKartu(6, KartuHukuman),
-    h_ListAppendList(DaftarKartuPemainSekarang, KartuHukuman, DaftarKartuBaru),
-    retract(kartuPemain(PemainSekarang, _)),
-    assertz(kartuPemain(PemainSekarang, DaftarKartuBaru)),
+    tarikKartu(PemainSekarang, 6),
     retractall(ancamanHukuman(_)), 
     asserta(ancamanHukuman(false)),
     giliranSelanjutnya.
 
 /* Tantang invalid */
 tantang :-
-    write('Perintah tidak dapat dilakukan. Kartu discard sekarang bukan wild draw four'), nl.
+    write('[!] Perintah tidak dapat dilakukan. Kartu discard sekarang bukan wild draw four'), nl.
