@@ -161,17 +161,16 @@ tangkap(Target) :-
     uniStatus(DaftarUni),
     \+ h_ListIsMember(Target, DaftarUni),
     !,
-    format('[!] ~w TERTANGKAP! Lupa menyerukan UNI.', [Target]), nl,
-    format('[i] ~w terpaksa mengambil 2 kartu penalti.', [Target]), nl,
-    format('[i] Giliran tetap pada ~w.', [Pemanggil]),
+    format('[!] ~w TERTANGKAP! Lupa menyerukan UNI.~n', [Target]),
+    format('[i] ~w terpaksa mengambil 2 kartu penalti.~n', [Target]),
     tarikKartu(Target, 2),
     giliranSelanjutnya.
 
 /* Tangkap Invalid*/
 tangkap(_) :-
     giliran(Pemanggil),
-    write('[!] Perintah tangkap tidak valid. '),
-    format('[i] ~w mendapatkan 1 kartu penalti.', [Pemanggil]), nl,
+    write('[!] Perintah tangkap tidak valid. '), nl
+    format('[i] ~w mendapatkan 1 kartu penalti.~n', [Pemanggil]),
     tarikKartu(Pemanggil, 1),
     giliranSelanjutnya, !.
 
