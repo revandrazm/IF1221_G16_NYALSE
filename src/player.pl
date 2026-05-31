@@ -1,5 +1,3 @@
-:- include('deck.pl').
-
 /* Inisialisasi pemain awal */
 inisialisasiPemain(JumlahPemain, DaftarPemain) :-
     inputNama(JumlahPemain, [], DaftarPemainUtuh),
@@ -15,7 +13,7 @@ inputNama(JumlahPemain, Akumulasi, Hasil) :-
     JumlahPemain > 0,
     write('Masukkan nama pemain (akhiri dengan titik): '),
     read(Nama),
-    (   h_ListIsMember(Nama, Akumulasi) 
+    (   h_ListIsMember(Nama, Akumulasi)
     ->  write('Nama sudah digunakan, gunakan nama lain!'), nl,
         inputNama(JumlahPemain, Akumulasi, Hasil)
     ;   JumlahPemainSisa is JumlahPemain - 1,

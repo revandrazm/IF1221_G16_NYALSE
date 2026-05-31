@@ -1,5 +1,3 @@
-:- include('turn.pl').
-
 /* ===== AKSI UTAMA ===== */
 mainkanKartu(Indeks) :-
     giliran(Pemain),

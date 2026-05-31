@@ -1,7 +1,5 @@
-:- include('deck.pl').
-
 /* Daftar Aksi yang Tersedia */
-daftarAksiUtama([mainkanKartu(indeksKartu), ambilKartu, 
+daftarAksiUtama([mainkanKartu(indeksKartu), ambilKartu,
                  tantang, uni(indeksKartu), tangkap(namaPemain)]).
 
 daftarAksiPendukung([lihatCommand, lihatKartu, cekInfo]).
@@ -29,7 +27,7 @@ printAksiPendukung :-
 /* Menampilkan Kartu Tangan Pemain */
 lihatKartu([], _) :- !.
 lihatKartu([kartu(Warna,Jenis)|Sisa], N) :-
-	format('~d. ', [N]), 
+	format('~d. ', [N]),
 	h_FormatCard(kartu(Warna, Jenis)), nl,
 	NBerikutnya is N+1,
 	lihatKartu(Sisa, NBerikutnya).
@@ -47,28 +45,28 @@ formatUrutan([H|T]):-
 printUrutan([], _) :- !.
 printUrutan([H|T], N):-
 	format('Nama pemain ~d: ~w', [N, H]), nl,
-	kartuPemain(H, DaftarKartu), 
+	kartuPemain(H, DaftarKartu),
 	h_ListLength(DaftarKartu, JumlahKartu),
 	format('Jumlah kartu: ~d', [JumlahKartu]), nl, nl,
-	NBerikutnya is N + 1, 
+	NBerikutnya is N + 1,
 	printUrutan(T, NBerikutnya).
 
 /* Menampilkan Informasi Permainan */
 lihatKartu :-
-	giliran(Player), 
+	giliran(Player),
 	kartuPemain(Player, DaftarKartu), nl,
 	write('Berikut kartu yang anda miliki'), nl,
 	lihatKartu(DaftarKartu, 1).
 
 cekInfo :-
-	discardTop(KartuTeratas), 
+	discardTop(KartuTeratas),
 	urutanPemain(Urutan),
 	write('Kartu discard top: '), h_FormatCard(KartuTeratas), nl, nl,
 	write('Urutan pemain: '), formatUrutan(Urutan), nl, nl,
 	printUrutan(Urutan, 1).
 
 /* Menampilkan Kartu dalam Format Penjumlahan */
-printKartu([Kartu]) :- 
+printKartu([Kartu]) :-
     h_FormatCard(Kartu),
     write(' = ').
 printKartu([Kartu|Sisa]) :-
@@ -90,14 +88,14 @@ printPoin([kartu(_, Jenis)|Sisa]) :-
 
 printSkor([]) :- !.
 printSkor([(Pemain, Poin)|Sisa]) :-
-    kartuPemain(Pemain, []), !, 
+    kartuPemain(Pemain, []), !,
     format('~w: kartu habis = ~w poin~n', [Pemain, Poin]),
     printSkor(Sisa).
 printSkor([(Pemain, Poin)|Sisa]) :-
     kartuPemain(Pemain, DaftarKartu),
-    format('~w: ', [Pemain]), 
-    printKartu(DaftarKartu), 
-    printPoin(DaftarKartu), 
+    format('~w: ', [Pemain]),
+    printKartu(DaftarKartu),
+    printPoin(DaftarKartu),
     format('~w poin~n', [Poin]),
     printSkor(Sisa).
 
