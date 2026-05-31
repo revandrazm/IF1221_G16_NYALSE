@@ -14,7 +14,7 @@ giliranSelanjutnya :-
     retract(giliran(PemainSekarang)),
     asserta(giliran(PemainBerikutnya)),
 
-    format('~nGiliran ~w.', [PemainBerikutnya]), !.
+    format('~nGiliran ~w.~n', [PemainBerikutnya]), !.
 
 giliranSebelumnya(Nama) :-
     giliran(PemainSekarang),
@@ -23,8 +23,8 @@ giliranSebelumnya(Nama) :-
 
     h_ListIndexOf(DaftarPemain, PemainSekarang, Indeks),
     h_ListLength(DaftarPemain, JumlahPemain),
-    (   Arah == kanan 
-    ->  IndeksPemainSebelumnya is ( Indeks - 1 + JumlahPemain) mod JumlahPemain 
+    (   Arah == kanan
+    ->  IndeksPemainSebelumnya is ( Indeks - 1 + JumlahPemain) mod JumlahPemain
     ;   IndeksPemainSebelumnya is ( Indeks + 1) mod JumlahPemain),
 
     h_ListGetElement(DaftarPemain, IndeksPemainSebelumnya, Nama).
