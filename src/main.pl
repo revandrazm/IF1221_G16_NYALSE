@@ -7,6 +7,7 @@
 :- include('rule.pl').
 :- include('display.pl').
 :- include('action.pl').
+:- include('bonus.pl').
 :- include('scoring.pl').
 
 startGame :-
@@ -93,6 +94,9 @@ jalankanPerintah(cekInfo, Pemain) :-
     playerTurnLoop(Pemain).
 jalankanPerintah(tangkap, Pemain) :-
     !, tangkap,
+    playerTurnLoop(Pemain).
+jalankanPerintah(godsHand, Pemain) :-
+    !, godsHand,
     playerTurnLoop(Pemain).
 
 jalankanPerintah(saveGame, sistem).
