@@ -3,6 +3,8 @@
 :- include('deck.pl').
 :- include('player.pl').
 :- include('turn.pl').
+:- include('efek.pl').
+:- include('rule.pl').
 :- include('display.pl').
 :- include('action.pl').
 :- include('scoring.pl').
