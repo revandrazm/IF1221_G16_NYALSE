@@ -7,7 +7,7 @@ testInit :-
     retractall(discardTop(_)),
     retractall(uniStatus(_)),
     retractall(deck(_)),
-    
+
     loadKartu(Deck),
     h_Shuffle(Deck, DeckAcak),
     asserta(giliran(player1)),
@@ -33,6 +33,8 @@ h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
     h_Shuffle(AwalSisa, SisaAcak).
 
 /* Basic Utils */
+cls :- write('\33\[2J').
+
 h_ListLength([], 0) :- !.
 h_ListLength([_|T], N) :-
     h_ListLength(T, N2),
@@ -46,8 +48,8 @@ h_ListAppendList([], X, X) :- !.
 h_ListAppendList([H|T], X, [H|THasil]) :-
     h_ListAppendList(T, X, THasil).
 
-h_ListReverse(L, R) :- 
-    h_ListLength(L, N), 
+h_ListReverse(L, R) :-
+    h_ListLength(L, N),
     h_ListReverse(L, R, N).
 h_ListReverse([], [], 0) :- !.
 h_ListReverse(List, List, 1) :- !.
