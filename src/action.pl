@@ -61,15 +61,15 @@ prosesAmbil(JumlahKartu, [KartuTeratas|SisaDeckTersedia], DeckAkhir, [KartuTerat
 /* Helpers */
 tambahStatusUni(Pemain) :-
 	uniStatus(DaftarUni),
-	(   \+ h_ListIsMember(Pemain, DaftarUni)
+	( \+ h_ListIsMember(Pemain, DaftarUni)
     ->  retract(uniStatus(_)),
         asserta(uniStatus([Pemain|DaftarUni]))
-    ;   true
-    ).
+  ; true
+  ).
 
 hapusStatusUni(Pemain) :-
 	uniStatus(DaftarUni),
-	(   h_ListIsMember(Pemain, DaftarUni)
+	( h_ListIsMember(Pemain, DaftarUni)
     ->  h_ListIndexOf(DaftarUni,Pemain,Indeks),
     		h_ListRemoveAtIndex(DaftarUni, Indeks, DaftarUniBaru),
       	retract(uniStatus(_)),
