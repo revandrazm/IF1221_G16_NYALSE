@@ -1,5 +1,3 @@
-:- include('deck.pl').
-
 /* Daftar Aksi yang Tersedia */
 daftarAksiUtamaKontekstual([pilihWarna(warna)]) :-
     memilihWarna(true), !.
