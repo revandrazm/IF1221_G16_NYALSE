@@ -1,5 +1,3 @@
-:- include('utils.pl').
-
 saveGame :-
   write('[?] Masukkan nama file penyimpanan: '), read(BaseName),
   name(BaseName, BaseString), name('.txt', ExtString), insertTail(BaseString, ExtString, FileString), name(FileName, FileString), nl,
