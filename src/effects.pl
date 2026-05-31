@@ -7,8 +7,8 @@ aplikasiEfek(skip) :-
 aplikasiEfek(reverse) :-
     arahPermainan(ArahAwal),
 
-    (   ArahAwal == kanan 
-    ->  ArahBaru = kiri 
+    (   ArahAwal == kanan
+    ->  ArahBaru = kiri
     ;   ArahBaru = kanan
     ),
 
@@ -23,7 +23,7 @@ aplikasiEfek(drawTwo) :-
     giliran(Korban),
     tarikKartu(Korban, 2),
     format('[!] EFEK +2: ~w terpaksa mengambil 2 kartu dan kehilangan giliran!~n', [Korban]),
-    giliranSelanjutnya, !. 
+    giliranSelanjutnya, !.
 
 aplikasiEfek(wild) :-
     write('[?] EFEK WILD: Pilih warna baru (gunakan pilihWarna(Warna))'), nl,
@@ -50,8 +50,29 @@ pilihWarna(Warna) :-
 
         format('[i] Berhasil! Warna permainan sekarang menjadi ~w.~n', [Warna]), nl,
         discardTop(kartu(_, Jenis)),
-        ( Jenis == wildDrawFour -> retractall(ancamanHukuman(_)), asserta(ancamanHukuman(true)) ; true ),
-        giliranSelanjutnya
+        (
+        	Jenis == wildDrawFour -> retractall(ancamanHukuman(_)), asserta(ancamanHukuman(true)), giliranSelanjutnya
+        ;
+        	Jenis == mimic ->
+         	(		efekMimic(EfekMimic)
+          ->	retractall(efekMimic(_)),
+	            (
+								EfekMimic == skip -> aplikasiEfek(skip)
+	            ;
+	            	EfekMimic == reverse -> aplikasiEfek(reverse)
+	            ;
+	            	EfekMimic == drawTwo -> aplikasiEfek(drawTwo)
+	            ;
+	            	EfekMimic == wildDrawFour -> retractall(ancamanHukuman(_)), asserta(ancamanHukuman(true)), giliranSelanjutnya
+	            ;
+	            	giliranSelanjutnya
+						  )
+					;
+						giliranSelanjutnya
+          )
+        ;
+        	giliranSelanjutnya
+        )
     ;   write('[!] Warna tidak valid! Silakan pilih: merah, kuning, hijau, atau biru.'), nl
     ).
 

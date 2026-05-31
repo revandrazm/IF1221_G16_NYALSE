@@ -34,18 +34,24 @@ mainkanKartu(IndeksMentah) :-
             (Warna \= hitam -> retractall(warnaAktif(_)), asserta(warnaAktif(Warna)) ; true),
             format('[>] ~w memainkan kartu: [ ', [Pemain]),
             h_FormatCard(Kartu), write(' ]'), nl,
-
+            ( h_ListIsMember(EfekSetelah, [skip, reverse, drawTwo, wild, wildDrawFour])
+            	->
+              retractall(aksiTerakhir(_)),
+              asserta(aksiTerakhir(Kartu))
+              ;
+              true
+            ),
             aplikasiEfek(EfekSetelah)
         )
     ).
 
 ambilKartu :-
     giliran(Pemain),
-    (   ancamanHukuman(true)    
-    ->  Jumlah = 4, 
-        retractall(ancamanHukuman(_)), 
-        asserta(ancamanHukuman(false)) 
-    ;   Jumlah = 1  
+    (   ancamanHukuman(true)
+    ->  Jumlah = 4,
+        retractall(ancamanHukuman(_)),
+        asserta(ancamanHukuman(false))
+    ;   Jumlah = 1
     ),
     tarikKartu(Pemain, Jumlah),
     format('[i] Kartu ~w telah diperbarui.~n', [Pemain]),
@@ -54,7 +60,7 @@ ambilKartu :-
 ambilSejumlahKartu(JumlahKartu, DaftarKartuTerpilih) :-
     deck(DeckAwal),
     h_ListLength(DeckAwal, JumlahDeck),
-    ( JumlahDeck < JumlahKartu 
+    ( JumlahDeck < JumlahKartu
     -> reshuffleDeck
     ; true
     ),
@@ -96,10 +102,10 @@ kumpulkanKartuPemain([Pemain|SisaPemain], Akumulasi, Hasil) :-
     h_ListAppendList(Akumulasi, DaftarKartu, DaftarKartuAkumulasi),
     kumpulkanKartuPemain(SisaPemain, DaftarKartuAkumulasi, Hasil).
 
-kurangiDaftarKartu(Full, [], Full) :- !. 
+kurangiDaftarKartu(Full, [], Full) :- !.
 kurangiDaftarKartu(Full, [H|T], Sisa) :-
     (   h_ListIndexOf(Full, H, Indeks )
-    ->  h_ListRemoveAtIndex(Full, Indeks, FullBaru)    
+    ->  h_ListRemoveAtIndex(Full, Indeks, FullBaru)
     ;   FullBaru = Full
     ),
     kurangiDaftarKartu(FullBaru, T, Sisa).
@@ -143,6 +149,13 @@ uni(IndeksMentah):-
 	format('[>] ~w memainkan kartu: [ ',[Pemain]),
     h_FormatCard(Kartu), write(' ]'), nl,
 	format('[!] *** ~w MENYERUKAN UNI!!! ***', [Pemain]), nl,
+	( h_ListIsMember(EfekSetelah, [skip, reverse, drawTwo, wild, wildDrawFour])
+	 	->
+	  retractall(aksiTerakhir(_)),
+	  asserta(aksiTerakhir(Kartu))
+	  ;
+	  true
+	),
 	aplikasiEfek(EfekSetelah).
 
 /* Uni Invalid */
@@ -183,11 +196,11 @@ tantang :-
 
     write('[i] Tantangan dilakukan'), nl,
     format('[i] Memeriksa kartu ~w...~n', [PemainSebelumnya]),
-    format('[i] Tantangan BERHASIL! ~w ketahuan melakukan bluffing.~n', [PemainSebelumnya]), 
+    format('[i] Tantangan BERHASIL! ~w ketahuan melakukan bluffing.~n', [PemainSebelumnya]),
     format('[i] ~w terpaksa mengambil 4 kartu penalti.~n', [PemainSebelumnya]),
 
     tarikKartu(PemainSebelumnya, 4),
-    retractall(ancamanHukuman(_)), 
+    retractall(ancamanHukuman(_)),
     asserta(ancamanHukuman(false)),
     giliranSelanjutnya.
 
@@ -201,11 +214,11 @@ tantang :-
 
     write('[i] Tantangan dilakukan'), nl,
     format('[i] Memeriksa kartu ~w...~n', [PemainSebelumnya]),
-    format('[i] Tantangan GAGAL! ~w terbukti jujur.~n', [PemainSebelumnya]), 
+    format('[i] Tantangan GAGAL! ~w terbukti jujur.~n', [PemainSebelumnya]),
     format('[i] ~w terkena penalti tambahan dan mengambil 6 kartu.~n', [PemainSekarang]),
 
     tarikKartu(PemainSekarang, 6),
-    retractall(ancamanHukuman(_)), 
+    retractall(ancamanHukuman(_)),
     asserta(ancamanHukuman(false)),
     giliranSelanjutnya.
 

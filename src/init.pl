@@ -11,6 +11,8 @@ startGame :-
     retractall(warnaAktif(_)),
     retractall(memilihWarna(_)),
     retractall(ancamanHukuman(_)),
+    retractall(aksiTerakhir(_)),
+    retractall(efekMimic(_)),
 
     assertz(memilihWarna(false)),
 
@@ -106,50 +108,50 @@ playerTurnLoop(Pemain) :-
     ).
 
 jalankanPerintah(mainkanKartu(Indeks), Pemain) :-
-    !, 
-    (   mainkanKartu(Indeks) 
-    ->  true 
+    !,
+    (   mainkanKartu(Indeks)
+    ->  true
     ;   playerTurnLoop(Pemain)
     ).
 
 jalankanPerintah(ambilKartu, Pemain) :-
     !,
-    ( ambilKartu 
-    ->  true 
-    ;   write('[!] Gagal mengambil kartu.'), nl, 
+    ( ambilKartu
+    ->  true
+    ;   write('[!] Gagal mengambil kartu.'), nl,
         playerTurnLoop(Pemain)
     ).
 
 jalankanPerintah(tantang, Pemain) :-
     !,
-    (   tantang 
-    ->  true 
+    (   tantang
+    ->  true
     ;   playerTurnLoop(Pemain)
     ).
 
 jalankanPerintah(uni(N), Pemain) :-
     !,
-    (   uni(N) 
-    ->  true 
+    (   uni(N)
+    ->  true
     ;   playerTurnLoop(Pemain)
     ).
 jalankanPerintah(godsHand, Pemain) :-
-    !, 
-    (   godsHand 
-    ->  true 
+    !,
+    (   godsHand
+    ->  true
     ;   playerTurnLoop(Pemain)
     ).
 
 jalankanPerintah(tangkap(Target), Pemain) :-
     !,
-    (   tangkap(Target) 
-    ->  true 
+    (   tangkap(Target)
+    ->  true
     ;   playerTurnLoop(Pemain)
     ).
 
 jalankanPerintah(pilihWarna(Warna), Pemain) :-
     !,
-    (   pilihWarna(Warna) 
+    (   pilihWarna(Warna)
     ->  true
     ;   playerTurnLoop(Pemain)
     ).
