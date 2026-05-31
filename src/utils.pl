@@ -10,6 +10,10 @@ h_Shuffle(Awal, [ElemenAcak|SisaAcak]) :-
     h_ListRemoveAtIndex(Awal, Indeks, AwalSisa),
     h_Shuffle(AwalSisa, SisaAcak).
 
+h_JumlahKartuPemain(Pemain, JumlahKartu) :-
+	kartuPemain(Pemain, ListKartu),
+	h_ListLength(ListKartu, JumlahKartu).
+
 /* Basic Utils */
 cls :- write('\33\[2J').
 
@@ -66,3 +70,8 @@ h_ListGetElement([_|T], Indeks, Elemen) :-
 h_ListIsMember(X, [X|_]) :- !.
 h_ListIsMember(X, [_|T]) :-
     h_ListIsMember(X, T).
+
+h_ListGetRandomElement(List, Elemen) :-
+	h_ListLength(List, ListLength),
+	random(0, ListLength, Indeks),
+	h_ListAtIndex(List, Indeks, Elemen).

@@ -7,6 +7,7 @@
 :- include('rule.pl').
 :- include('display.pl').
 :- include('action.pl').
+:- include('bonus.pl').
 :- include('scoring.pl').
 
 startGame :-
@@ -125,7 +126,11 @@ jalankanPerintah(cekInfo, Pemain) :-
 jalankanPerintah(tangkap(Target), Pemain) :-
     !, tangkap(Target),
     playerTurnLoop(Pemain).
+jalankanPerintah(godsHand, Pemain) :-
+    !, godsHand,
+    playerTurnLoop(Pemain).
 
+<<<<<<< HEAD
 jalankanPerintah(saveGame, Pemain) :-
     !,
     write('Fitur saveGame belum diimplementasi.'), nl,
@@ -135,6 +140,10 @@ jalankanPerintah(loadGame, Pemain) :-
     !,
     write('Fitur loadGame belum diimplementasi.'), nl,
     playerTurnLoop(Pemain).
+=======
+jalankanPerintah(saveGame, Pemain) :- saveGame.
+jalankanPerintah(loadGame, Pemain) :- loadGame.
+>>>>>>> e8e0e9e97ad452d6579bf1cf1cb86b966bc80fe8
 
 jalankanPerintah(_, Pemain) :-
     write('Perintah tidak dikenali atau format salah.'), nl,
