@@ -78,13 +78,14 @@ hapusStatusUni(Pemain) :-
 	).
 
 /* Uni Valid */
-uni(Indeks):-
+uni(IndeksMentah):-
 	giliran(Pemain),
     kartuPemain(Pemain,DaftarKartu),
 	h_ListLength(DaftarKartu, 2),
 	h_ListGetElement(DaftarKartu, Indeks, Kartu),
     kartuMainValid(Kartu),
 	!,
+    Indeks is IndeksMentah - 1,
 	h_ListRemoveAtIndex(DaftarKartu, Indeks, DaftarKartuBaru),
 	retract(kartuPemain(Pemain, _)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
@@ -122,7 +123,8 @@ tangkap(Target) :-
     ambilSejumlahKartu(2, KartuPenalti),
     h_ListAppendList(DaftarKartuTarget, KartuPenalti, DaftarKartuBaru),
     retract(kartuPemain(Target, _)),
-    asserta(kartuPemain(Target, DaftarKartuBaru)).
+    asserta(kartuPemain(Target, DaftarKartuBaru)),
+    giliranSelanjutnya.
 
 /* Tangkap Invalid*/
 tangkap(_) :-
@@ -134,6 +136,7 @@ tangkap(_) :-
     h_ListAppendList(DaftarKartuLama, KartuPenalti, DaftarKartuBaru),
     retract(kartuPemain(Pemanggil, _)),
     asserta(kartuPemain(Pemanggil, DaftarKartuBaru)).
+    giliranSelanjutnya, !.
 
 /* Tantang berhasil */
 tantang :-
