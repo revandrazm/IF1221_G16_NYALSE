@@ -190,7 +190,7 @@ tangkap(Target) :-
 /* Tangkap Invalid*/
 tangkap(_) :-
     giliran(Pemanggil),
-    write('[!] Perintah tangkap tidak valid. '), nl
+    write('[!] Perintah tangkap tidak valid. '), nl,
     format('[i] ~w mendapatkan 1 kartu penalti.~n', [Pemanggil]),
     tarikKartu(Pemanggil, 1),
     giliranSelanjutnya, !.
