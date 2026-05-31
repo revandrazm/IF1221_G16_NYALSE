@@ -5,7 +5,7 @@ godsHand :-
 		->
 		tanganTuhan
 		;
-		write('Tuhan tidak berkehendak.'), nl,
+		write('[i] Tuhan tidak berkehendak.'), nl,
 		giliranSelanjutnya
 	).
 
@@ -18,11 +18,11 @@ tanganTuhan :-
 		cariPenerima(ListPemain, Korban, Penerima),
 		pindahkanKartu(Korban, Penerima, KartuPindah),
 
-    write('Tuhan telah berkehendak.'), nl,
-    write('Kartu '), h_FormatCard(KartuPindah),
+    write('[i] Tuhan telah berkehendak.'), nl,
+    write('[i] Kartu '), h_FormatCard(KartuPindah),
     format(' milik ~w telah berpindah ke tangan ~w!~n', [Korban, Penerima])
 		;
-		write('Tuhan tidak berkehendak.'), nl
+		write('[i] Tuhan tidak berkehendak.'), nl
 	),
 	giliranSelanjutnya. % not sure
 

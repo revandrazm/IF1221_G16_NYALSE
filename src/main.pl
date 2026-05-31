@@ -11,7 +11,7 @@
 :- include('scoring.pl').
 
 startGame :-
-    retractall(gameRunning(_)),
+    cls,
     retractall(deck(_)),
     retractall(arahPermainan(_)),
     retractall(uniStatus(_)),
@@ -21,22 +21,35 @@ startGame :-
     retractall(discardTop(_)),
     retractall(warnaAktif(_)),
     retractall(memilihWarna(_)),
+    retractall(ancamanHukuman(_)),
 
-    assertz(gameRunning(true)),
     assertz(memilihWarna(false)),
 
     randomize,
 
-    write('*******************************************'), nl,
-    write('*         SELAMAT DATANG DI UNI!          *'), nl,
-    write('*******************************************'), nl,
+  nl,
+    write('.============================================. '), nl,
+    write('|                                            |'), nl,
+    write('|          __   __  ___    _  _____          |'), nl,
+    write('|         |  | |  ||   \\  | ||_   _|         |'), nl,
+    write('|         |  | |  || |\\ \\ | |  | |           |'), nl,
+    write('|         |  |_|  || | \\ \\| | _| |_          |'), nl,
+    write('|          \\_____/ |_|  \\___||_____|         |'), nl,
+    write('|                                            |'), nl,
+    write('|  ----------------------------------------  |'), nl,
+    write('|         SELAMAT DATANG DI PERMAINAN        |'), nl,
+    write('|      G-16  N Y A L S E  E D I T I O N      |'), nl,
+    write('|  ----------------------------------------  |'), nl,
+    write('|                                            |'), nl,
+    write('\'============================================\' '), nl,
+    nl,
 
     inputJumlahPemain(JumlahPemain),
     inisialisasiPemain(JumlahPemain, DaftarPemain),
     printUrutanAwal,
     loadKartu(Deck),
     h_Shuffle(Deck, DeckAcak),
-    nl, write('Setiap pemain mendapat 7 kartu acak.'), nl,
+    nl, write('[i] Setiap pemain mendapat 7 kartu acak.'), nl,
     bagiKartu(DaftarPemain, DeckAcak, SisaDeck),
     initDiscard(SisaDeck, SisaDeckAkhir),
 
@@ -45,20 +58,23 @@ startGame :-
     assertz(uniStatus([])),
 
     giliran(PemainAktif),
-    format('~nGiliran ~w~n', [PemainAktif]),
-    nl, write('Set up selesai! Permainan dimulai!'), nl,
+    nl, write('[i] Set up selesai! Permainan dimulai!'), nl,
+    cls,
+    nl,
+    write('==========================================='), nl,
+    format('          GILIRAN: ~w~n', [PemainAktif]),
+    write('==========================================='), nl,
 
     gameLoop.
 
 inputJumlahPemain(N):-
-    write('Masukkan jumlah pemain (2-4, akhiri dengan titik): '),
+    write('[?] Masukkan jumlah pemain (2-4, akhiri dengan titik): '),
     read(Input),
     (   integer(Input), Input >= 2, Input =< 4
-    ->  N = Input
-    ;   write('Jumlah pemain tidak valid! Masukkan jumlah pemain lagi.'), nl,
+    ->  N = Input, nl
+    ;   write('[!] Jumlah pemain tidak valid! Masukkan jumlah pemain lagi.'), nl,
         inputJumlahPemain(N)
-    ),
-    nl.
+    ).
 
 gameLoop :-
     cekGameOver(_), !,
@@ -70,14 +86,14 @@ gameLoop :-
     gameLoop.
 
 playerTurnLoop(Pemain) :-
-    nl, write('> Masukkan perintah: '),
+    nl, write('[?] Masukkan perintah: '),
     read(Perintah),
     (   memilihWarna(true), \+ (Perintah = pilihWarna(_); Perintah = lihatCommand; Perintah = cekInfo; Perintah = lihatKartu)
-    ->  write('Anda harus memilih warna! Gunakan pilihWarna(Warna).'), nl,
+    ->  write('[!] Anda harus memilih warna! Gunakan pilihWarna(Warna).'), nl,
         playerTurnLoop(Pemain)
 
     ;   ancamanHukuman(true), \+ (Perintah = tantang; Perintah = ambilKartu; Perintah = lihatCommand; Perintah = cekInfo; Perintah = lihatKartu)
-    ->  write('Anda terkena efek Wild Draw Four! Anda HANYA boleh memilih ambilKartu atau tantang.'), nl,
+    ->  write('[!] Anda terkena efek Wild Draw Four! Anda HANYA boleh memilih ambilKartu atau tantang.'), nl,
         playerTurnLoop(Pemain)
 
     ;   jalankanPerintah(Perintah, Pemain)
@@ -94,7 +110,7 @@ jalankanPerintah(ambilKartu, Pemain) :-
     !,
     ( ambilKartu 
     ->  true 
-    ;   write('Gagal mengambil kartu.'), nl, 
+    ;   write('[!] Gagal mengambil kartu.'), nl, 
         playerTurnLoop(Pemain)
     ).
 
@@ -149,12 +165,17 @@ jalankanPerintah(saveGame, Pemain) :-
     saveGame,
     playerTurnLoop(Pemain).
 
-jalankanPerintah(loadGame, Pemain) :-
+jalankanPerintah(loadGame, _) :-
     !,
     loadGame,
-    playerTurnLoop(Pemain).
+    giliran(PemainAktif),
+    cls,
+    nl,
+    write('==========================================='), nl,
+    format('          GILIRAN: ~w~n', [PemainAktif]),
+    write('==========================================='), nl, !.
 
 jalankanPerintah(_, Pemain) :-
-    write('Perintah tidak dikenali atau format salah.'), nl,
-    write('Ketik lihatCommand untuk melihat perintah yang tersedia.'), nl,
+    write('[!] Perintah tidak dikenali atau format salah.'), nl,
+    write('[i] Ketik lihatCommand untuk melihat perintah yang tersedia.'), nl,
     playerTurnLoop(Pemain).

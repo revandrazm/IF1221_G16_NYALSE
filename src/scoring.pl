@@ -41,14 +41,14 @@ peringkatPemain(DaftarPoin, PeringkatPoin) :-
 
 endGame :-
     cekGameOver(Pemenang),
-    format('Permainan selesai! ~w menghabiskan semua kartunya!~n~n', [Pemenang]),
-    write('Berikut perhitungan poin sisa kartu:'), nl,
+    format('[i] Permainan SELESAI! ~w menghabiskan semua kartunya!~n~n', [Pemenang]),
+    write('[i] Berikut perhitungan poin sisa kartu:'), nl,
     hitungPoinSemua(DaftarPoin),
     printSkor(DaftarPoin),
     peringkatPemain(DaftarPoin, PeringkatPoin),
-    format('~nUrutan pemenang:~n', []),
+    format('~n[i] Urutan pemenang:~n', []),
     printPeringkat(PeringkatPoin, 1),
-    format('~nSelamat ~w menjadi pemenang!~n', [Pemenang]).
+    format('~n[i] Selamat ~w menjadi pemenang!~n', [Pemenang]).
 
 cekGameOver(Pemenang):-
     kartuPemain(Pemenang, []), !.

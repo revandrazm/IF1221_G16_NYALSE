@@ -11,14 +11,14 @@ inisialisasiPemain(JumlahPemain, DaftarPemain) :-
 inputNama(0, Akumulasi, Akumulasi) :- !.
 inputNama(JumlahPemain, Akumulasi, Hasil) :-
     JumlahPemain > 0,
-    write('Masukkan nama pemain (akhiri dengan titik): '),
+    write('[?] Masukkan nama pemain (Bungkus dengan petik satu dan akhiri dengan titik): '),
     read(Nama),
     name(Nama, [ASCIIAwal|_]),
     (   (ASCIIAwal < 65 ; ASCIIAwal > 90)
-    ->  write('Nama harus diawali huruf kapital!'), nl,
+    ->  write('[!] Nama harus diawali huruf kapital!'), nl,
         inputNama(JumlahPemain, Akumulasi, Hasil)
     ;   h_ListIsMember(Nama, Akumulasi)
-    ->  write('Nama sudah digunakan, gunakan nama lain!'), nl,
+    ->  write('[!] Nama sudah digunakan, gunakan nama lain!'), nl,
         inputNama(JumlahPemain, Akumulasi, Hasil)
     ;   JumlahPemainSisa is JumlahPemain - 1,
         h_ListAppendElement(Akumulasi, Nama, AkumulasiBerikutnya),

@@ -14,6 +14,13 @@ giliranSelanjutnya :-
     retract(giliran(PemainSekarang)),
     asserta(giliran(PemainBerikutnya)),
 
+    cls,
+
+    nl,
+    write('==========================================='), nl,
+    format('          GILIRAN: ~w~n', [PemainBerikutnya]),
+    write('==========================================='), nl, !.
+
 giliranSebelumnya(Nama) :-
     giliran(PemainSekarang),
     urutanPemain(DaftarPemain),
