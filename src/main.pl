@@ -95,8 +95,8 @@ jalankanPerintah(tangkap, Pemain) :-
     !, tangkap,
     playerTurnLoop(Pemain).
 
-jalankanPerintah(saveGame, sistem).
-jalankanPerintah(loadGame, sistem).
+jalankanPerintah(saveGame, Pemain) :- saveGame.
+jalankanPerintah(loadGame, Pemain) :- loadGame.
 
 jalankanPerintah(_, Pemain) :-
     write('Perintah tidak dikenali atau format salah. Ketik lihatCommand untuk melihat perintah yang tersedia.'), nl,
