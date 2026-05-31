@@ -15,3 +15,16 @@ giliranSelanjutnya :-
     asserta(giliran(PemainBerikutnya)),
 
     format('~nGiliran ~w.', [PemainBerikutnya]), !.
+
+giliranSebelumnya(Nama) :-
+    giliran(PemainSekarang),
+    urutanPemain(DaftarPemain),
+    arahPermainan(Arah),
+
+    h_ListIndexOf(DaftarPemain, PemainSekarang, Indeks),
+    h_ListLength(DaftarPemain, JumlahPemain),
+    (   Arah == kanan 
+    ->  IndeksPemainSebelumnya is ( Indeks - 1 + JumlahPemain) mod JumlahPemain 
+    ;   IndeksPemainSebelumnya is ( Indeks + 1) mod JumlahPemain),
+
+    h_ListGetElement(DaftarPemain, IndeksPemainSebelumnya, Nama).

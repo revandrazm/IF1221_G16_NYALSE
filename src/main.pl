@@ -6,10 +6,6 @@
 :- include('display.pl').
 :- include('action.pl').
 :- include('scoring.pl').
-:- dynamic(gameRunning/1).
-:- initialization(main).
-
-main :- startGame.
 
 startGame :-
     retractall(gameRunning(_)),
@@ -31,8 +27,10 @@ startGame :-
 
     inputJumlahPemain(JumlahPemain),
     inisialisasiPemain(JumlahPemain, DaftarPemain),
+    printUrutanAwal,
     loadKartu(Deck),
     h_Shuffle(Deck, DeckAcak),
+    nl, write('Setiap pemain mendapat 7 kartu acak.'), nl,
     bagiKartu(DaftarPemain, DeckAcak, SisaDeck),
     initDiscard(SisaDeck, SisaDeckAkhir),
 
@@ -40,7 +38,11 @@ startGame :-
     assertz(arahPermainan(kanan)),
     assertz(uniStatus([])),
 
-    write('Set up selesai! Permainan dimulai!'), nl.
+    giliran(PemainAktif),
+    format('~nGiliran ~w~n', [PemainAktif]),
+    nl, write('Set up selesai! Permainan dimulai!'), nl,
+
+    gameLoop.
 
 inputJumlahPemain(N):-
     write('Masukkan jumlah pemain (2-4, akhiri dengan titik): '),
@@ -49,4 +51,51 @@ inputJumlahPemain(N):-
     ->  N = Input
     ;   write('Jumlah pemain tidak valid! Masukkan jumlah pemain lagi.'), nl,
         inputJumlahPemain(N)
-    ).
+    ),
+    nl.
+
+gameLoop :-
+    cekGameOver(Pemenang), !,
+    endGame.
+
+gameLoop :-
+    giliran(PemainAktif),
+    playerTurnLoop(PemainAktif),
+    gameLoop.
+
+playerTurnLoop(Pemain) :-
+    nl, write('> Masukkan perintah: '),
+    read(Perintah),
+    jalankanPerintah(Perintah, Pemain).
+
+
+jalankanPerintah(mainkanKartu(Indeks), _) :-
+    !, mainkanKartu(Indeks).
+
+jalankanPerintah(ambilKartu, _) :-
+    !, ambilKartu.
+
+jalankanPerintah(tantang, _) :-
+    !, tantang.
+jalankanPerintah(uni(N), _) :-
+    !, uni(N).
+
+jalankanPerintah(lihatCommand, Pemain) :-
+    !, lihatCommand,
+    playerTurnLoop(Pemain).
+jalankanPerintah(lihatKartu, Pemain) :-
+    !, lihatKartu,
+    playerTurnLoop(Pemain).
+jalankanPerintah(cekInfo, Pemain) :-
+    !, cekInfo,
+    playerTurnLoop(Pemain).
+jalankanPerintah(tangkap, Pemain) :-
+    !, tangkap,
+    playerTurnLoop(Pemain).
+
+jalankanPerintah(saveGame, sistem).
+jalankanPerintah(loadGame, sistem).
+
+jalankanPerintah(_, Pemain) :-
+    write('Perintah tidak dikenali atau format salah. Ketik lihatCommand untuk melihat perintah yang tersedia.'), nl,
+    playerTurnLoop(Pemain).

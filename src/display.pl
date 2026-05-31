@@ -1,14 +1,31 @@
 /* Daftar Aksi yang Tersedia */
-daftarAksiUtama([mainkanKartu(indeksKartu), ambilKartu,
-                 tantang, uni(indeksKartu), tangkap(namaPemain)]).
+daftarAksiUtamaKontekstual([pilihWarna(warna)]) :-
+    memilihWarna(true), !.
+
+daftarAksiUtamaKontekstual([ambilKartu, tantang]) :-
+    discardTop(kartu(hitam, wildDrawFour)), !.
+
+daftarAksiUtamaKontekstual(DaftarAksi) :-
+    giliran(Pemain),
+    kartuPemain(Pemain, DaftarKartu),
+    AksiAwal = [mainkanKartu(indeksKartu), ambilKartu],
+
+    (   h_ListLength(DaftarKartu, 2)
+    ->  h_ListAppendList(AksiAwal, [uni(indeksKartu)], AksiAkhir)
+    ;   AksiAkhir = AksiAwal
+    ),
+
+    h_ListAppendList(AksiAkhir, [tangkap(namaPemain)], DaftarAksi).
 
 daftarAksiPendukung([lihatCommand, lihatKartu, cekInfo]).
 
 lihatCommand :-
+    daftarAksiUtamaKontekstual(DaftarUtama),
+    daftarAksiPendukung(DaftarPendukung),
     write('Aksi utama yang tersedia:'), nl,
-    printAksiUtama, nl,
+    printList(DaftarUtama, 1), nl,
     write('Aksi pendukung yang tersedia:'), nl,
-    printAksiPendukung, !.
+    printList(DaftarPendukung, 1), !.
 
 printList([], _).
 printList([H|T], N) :-
@@ -18,10 +35,6 @@ printList([H|T], N) :-
 
 printAksiUtama :-
     daftarAksiUtama(DaftarAksi),
-    printList(DaftarAksi, 1).
-
-printAksiPendukung :-
-    daftarAksiPendukung(DaftarAksi),
     printList(DaftarAksi, 1).
 
 /* Menampilkan Kartu Tangan Pemain */
@@ -104,3 +117,18 @@ printPeringkat([(Pemain, Poin)|Sisa], Peringkat) :-
     format('~w. ~w (~w Poin)~n', [Peringkat, Pemain, Poin]),
     PeringkatSelanjutnya is Peringkat + 1,
     printPeringkat(Sisa, PeringkatSelanjutnya).
+
+printUrutanAwal:-
+    nl,
+    urutanPemain(DaftarPemain),
+    write('Urutan pemain: '),
+    cetakDaftarUrutanPemain(DaftarPemain),
+    nl.
+
+cetakDaftarUrutanPemain([]) :- !.
+cetakDaftarUrutanPemain([PemainTerakhir]) :-
+    format('~w.', [PemainTerakhir]),
+    !.
+cetakDaftarUrutanPemain([PemainAktif|SisaPemain]) :-
+    format('~w - ', [PemainAktif]),
+    cetakDaftarUrutanPemain(SisaPemain).
