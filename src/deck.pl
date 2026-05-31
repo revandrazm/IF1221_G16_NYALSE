@@ -3,12 +3,12 @@
 
 /* Daftar Kartu Valid*/
 warnaDasar([merah, kuning, hijau, biru]).
-jenisKartu([0, 1, 1, 2, 2, 3, 3, 4, 4, 
-            5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 
+jenisKartu([0, 1, 1, 2, 2, 3, 3, 4, 4,
+            5, 5, 6, 6, 7, 7, 8, 8, 9, 9,
             skip, skip, reverse, reverse, drawTwo, drawTwo]).
-kartuHitam([kartu(hitam, wild), kartu(hitam, wild), 
-            kartu(hitam, wild), kartu(hitam, wild), 
-            kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour), 
+kartuHitam([kartu(hitam, wild), kartu(hitam, wild),
+            kartu(hitam, wild), kartu(hitam, wild),
+            kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour),
             kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour)]).
 
 /* Nilai Kartu */
@@ -32,10 +32,11 @@ nilaiKartu(wildDrawFour, 20).
 kartuMainValid(kartu(Warna, Jenis)) :-
     discardTop(kartu(_, JenisDiscard)),
     warnaAktif(WarnaAktif),
-    ( (Warna = WarnaAktif, Warna \= hitam)
-    ; (Jenis = JenisDiscard, Jenis \= wild, Jenis \= wildDrawFour)
-    ; (Jenis = wild, JenisDiscard \= wild)
-    ; (Jenis = wildDrawFour, JenisDiscard \= wildDrawFour)
+    !,
+    ( (Warna == WarnaAktif, Warna \= hitam)
+    ; (Jenis == JenisDiscard, Jenis \= wild, Jenis \= wildDrawFour)
+    ; (Jenis == wild, JenisDiscard \= wild)
+    ; (Jenis == wildDrawFour, JenisDiscard \= wildDrawFour)
     ).
 
 /* Formatting Kartu */
@@ -63,11 +64,12 @@ loadKartu(DaftarKartu):-
 
 /* Menginisiasi kartu discard awal */
 initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
-    Warna \= hitam, !,
+    Warna \= hitam, integer(Jenis),
+    !,
     SisaAkhir = Sisa,
     assertz(discardTop(kartu(Warna, Jenis))),
     assertz(warnaAktif(Warna)),
-    write('Kartu awal di discard pile: '), write(kartu(Warna, Jenis)), nl.
+    write('Kartu awal di discard pile: '), h_FormatCard(kartu(Warna, Jenis)), nl.
 initDiscard([kartu(Warna, Jenis)|Sisa], SisaAkhir):-
     h_ListLength(Sisa, Panjang),
     random(0, Panjang, Indeks),
