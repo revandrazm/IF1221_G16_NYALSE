@@ -25,17 +25,6 @@ nilaiKartu(drawTwo, 10).
 nilaiKartu(wild, 20).
 nilaiKartu(wildDrawFour, 20).
 
-/* Validitas Kartu */
-kartuMainValid(kartu(Warna, Jenis)) :-
-    discardTop(kartu(_, JenisDiscard)),
-    warnaAktif(WarnaAktif),
-    !,
-    ( (Warna == WarnaAktif, Warna \= hitam)
-    ; (Jenis == JenisDiscard, Jenis \= wild, Jenis \= wildDrawFour)
-    ; (Jenis == wild, JenisDiscard \= wild)
-    ; (Jenis == wildDrawFour, JenisDiscard \= wildDrawFour)
-    ).
-
 /* Formatting Kartu */
 formatKartu(kartu(Warna,Jenis), Atom):-
 	format(atom(Atom), '~w-~w', [Warna,Jenis]).
