@@ -6,7 +6,9 @@ jenisKartu([0, 1, 1, 2, 2, 3, 3, 4, 4,
 kartuHitam([kartu(hitam, wild), kartu(hitam, wild),
             kartu(hitam, wild), kartu(hitam, wild),
             kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour),
-            kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour)]).
+            kartu(hitam, wildDrawFour), kartu(hitam, wildDrawFour),
+            kartu(hitam, mimic), kartu(hitam, mimic),
+            kartu(hitam, mimic), kartu(hitam, mimic)]).
 
 /* Nilai Kartu */
 nilaiKartu(0, 1).
@@ -24,6 +26,7 @@ nilaiKartu(reverse, 10).
 nilaiKartu(drawTwo, 10).
 nilaiKartu(wild, 20).
 nilaiKartu(wildDrawFour, 20).
+nilaiKartu(mimic, 20).
 
 /* Formatting Kartu */
 formatKartu(kartu(Warna,Jenis), Atom):-

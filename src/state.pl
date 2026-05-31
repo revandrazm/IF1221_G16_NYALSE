@@ -12,3 +12,5 @@
 :- dynamic(osSistem/1).             % Tipe OS: windows / unix
 
 /* Bonus */
+:- dynamic(aksiTerakhir/1).			% Kartu aksi terakhir
+:- dynamic(efekMimic/1).				% Efek yang disalin oleh mimic

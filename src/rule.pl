@@ -5,6 +5,7 @@ kartuMainValid(kartu(Warna, Jenis)) :-
     !,
     (   Jenis == wild, JenisDiscard \= wild, !
     ;   Jenis == wildDrawFour, JenisDiscard \= wildDrawFour, !
+    ;		Jenis == mimic, !
     ;   Jenis == drawTwo, Warna == WarnaAktif, JenisDiscard \= drawTwo, !
     ;   Warna \= hitam,
         ( Warna == WarnaAktif, !
