@@ -9,5 +9,6 @@
 :- dynamic(uniStatus/1).		    % List pemain yg sudah uni
 :- dynamic(memilihWarna/1).         % Status dapat menggunakan pilihWarna (true/false)
 :- dynamic(ancamanHukuman/1).       % terancam terkena plus four (true/false)
+:- dynamic(osSistem/1).             % Tipe OS: windows / unix
 
 /* Bonus */

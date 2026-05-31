@@ -18,7 +18,20 @@ h_JumlahKartuPemain(Pemain, JumlahKartu) :-
 insertTail([], X, X).
 insertTail([H|T], X, [H|R]) :- insertTail(T, X, R).
 
-cls :- write('\33\[2J').
+/* Clear Screen Lintas Platform */
+cls :- 
+    osSistem(windows), 
+    !, 
+    system('cls').
+
+cls :- 
+    osSistem(unix), 
+    !, 
+    system('clear').
+
+/* Fallback jika terjadi error state */
+cls :- 
+    nl, nl, nl, nl, nl.
 
 h_ListLength([], 0) :- !.
 h_ListLength([_|T], N) :-
