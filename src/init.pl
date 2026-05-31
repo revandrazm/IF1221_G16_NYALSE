@@ -49,9 +49,14 @@ startGame :-
     giliran(PemainAktif),
     nl, write('[i] Set up selesai! Permainan dimulai!'), nl,
     cls,
+    discardTop(KartuMeja),
+    warnaAktif(Warna),
     nl,
     write('==========================================='), nl,
     format('          GILIRAN: ~w~n', [PemainAktif]),
+    write('-------------------------------------------'), nl,
+    write(' [i] Kartu Teratas : '), h_FormatCard(KartuMeja), nl,
+    format(' [i] Warna Aktif   : ~w~n', [Warna]),
     write('==========================================='), nl,
 
     gameLoop.
@@ -170,9 +175,14 @@ jalankanPerintah(loadGame, _) :-
     loadGame,
     giliran(PemainAktif),
     cls,
+    discardTop(KartuMeja),
+    warnaAktif(Warna),
     nl,
     write('==========================================='), nl,
     format('          GILIRAN: ~w~n', [PemainAktif]),
+    write('-------------------------------------------'), nl,
+    write(' [i] Kartu Teratas : '), h_FormatCard(KartuMeja), nl,
+    format(' [i] Warna Aktif   : ~w~n', [Warna]),
     write('==========================================='), nl, !.
 
 jalankanPerintah(_, Pemain) :-

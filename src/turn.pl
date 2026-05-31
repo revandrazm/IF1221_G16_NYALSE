@@ -16,9 +16,15 @@ giliranSelanjutnya :-
 
     cls,
 
+    discardTop(KartuMeja),
+    warnaAktif(Warna),
+
     nl,
     write('==========================================='), nl,
     format('          GILIRAN: ~w~n', [PemainBerikutnya]),
+    write('-------------------------------------------'), nl,
+    write(' [i] Kartu Teratas : '), h_FormatCard(KartuMeja), nl,
+    format(' [i] Warna Aktif   : ~w~n', [Warna]),
     write('==========================================='), nl, !.
 
 giliranSebelumnya(Nama) :-
