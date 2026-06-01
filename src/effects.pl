@@ -21,8 +21,8 @@ aplikasiEfek(reverse) :-
 aplikasiEfek(drawTwo) :-
     giliranSelanjutnya,
     giliran(Korban),
-    tarikKartu(Korban, 2),
     format('[!] EFEK +2: ~w terpaksa mengambil 2 kartu dan kehilangan giliran!~n', [Korban]),
+    tarikKartu(Korban, 2),
     giliranSelanjutnya, !.
 
 aplikasiEfek(wild) :-
@@ -34,6 +34,24 @@ aplikasiEfek(wildDrawFour) :-
     write('[?] EFEK +4: Pilih warna baru (gunakan pilihWarna(Warna))'), nl,
     format('[!] Hati-hati! Pemain berikutnya terancam mengambil 4 kartu jika tidak menantang.~n', []),
     retract(memilihWarna(false)),
+    asserta(memilihWarna(true)), !.
+
+/* Bonus Mimic */
+aplikasiEfek(mimic) :-
+    ( aksiTerakhir(kartu(WarnaAksi, JenisAksi))
+    		->
+        format('[i] Kartu aksi terakhir yang dimainkan: ~w-~w~n', [WarnaAksi, JenisAksi]),
+        format('[i] Kartu mimic menyalin efek ~w!~n', [JenisAksi]),
+        retractall(efekMimic(_)),
+        asserta(efekMimic(JenisAksi))
+        ;
+        write('[i] Belum ada kartu aksi sebelumnya.'), nl,
+        write('[i] Kartu mimic berfungsi sebagai wild biasa.'), nl,
+        retractall(efekMimic(_)),
+        asserta(efekMimic(wild))
+    ),
+    write('[?] Pilih warna baru (gunakan pilihWarna(Warna))'), nl,
+    retractall(memilihWarna(_)),
     asserta(memilihWarna(true)), !.
 
 aplikasiEfek(_) :-

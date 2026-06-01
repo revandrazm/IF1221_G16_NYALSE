@@ -94,6 +94,16 @@ gameLoop :-
     gameLoop.
 
 playerTurnLoop(Pemain) :-
+    ( infoKartuDitarik(Pemain, KartuDitarik) ->
+        format('[i] Anda mendapatkan kartu berikut:~n    + ', []),
+        cetakKartuDitarik(KartuDitarik),
+        retractall(infoKartuDitarik(Pemain, _))
+    ; true
+    ),
+    ( ancamanHukuman(true) -> 
+        write('[i] Anda terkena efek Wild Draw Four'), nl
+    ; true    
+    ),
     nl, write('[?] Masukkan perintah: '),
     read(Perintah),
     (   memilihWarna(true), \+ (Perintah = pilihWarna(_); Perintah = lihatCommand; Perintah = cekInfo; Perintah = lihatKartu)
@@ -101,7 +111,7 @@ playerTurnLoop(Pemain) :-
         playerTurnLoop(Pemain)
 
     ;   ancamanHukuman(true), \+ (Perintah = tantang; Perintah = ambilKartu; Perintah = lihatCommand; Perintah = cekInfo; Perintah = lihatKartu)
-    ->  write('[!] Anda terkena efek Wild Draw Four! Anda HANYA boleh memilih ambilKartu atau tantang.'), nl,
+    ->  write('[!] Anda HANYA boleh memilih ambilKartu atau tantang.'), nl,
         playerTurnLoop(Pemain)
 
     ;   jalankanPerintah(Perintah, Pemain)

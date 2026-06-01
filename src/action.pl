@@ -6,8 +6,20 @@ tarikKartu(Pemain, Jumlah) :-
     retract(kartuPemain(Pemain, _)),
     asserta(kartuPemain(Pemain, DaftarKartuBaru)),
     hapusStatusUni(Pemain),
-    format('[i] ~w mengambil ~w kartu: ', [Pemain, Jumlah]),
-    cetakKartuDitarik(KartuBaru).
+    ( giliran(Pemain) ->
+        format('    + Rincian kartu: ', []),
+        cetakKartuDitarik(KartuBaru)
+    ;
+        tambahInfoDitarik(Pemain, KartuBaru)
+    ).
+
+tambahInfoDitarik(Pemain, KartuBaru) :-
+    ( infoKartuDitarik(Pemain, KartuLama) ->
+        h_ListAppendList(KartuLama, KartuBaru, Gabungan),
+        retract(infoKartuDitarik(Pemain, _)),
+        asserta(infoKartuDitarik(Pemain, Gabungan))
+    ; asserta(infoKartuDitarik(Pemain, KartuBaru))
+    ).
 
 cetakKartuDitarik([]) :- nl.
 cetakKartuDitarik([Kartu]) :-
@@ -59,11 +71,13 @@ ambilKartu :-
     (   ancamanHukuman(true)
     ->  Jumlah = 4,
         retractall(ancamanHukuman(_)),
-        asserta(ancamanHukuman(false)) 
-        ;   Jumlah = 1  
-        ),
-        tarikKartu(Pemain, Jumlah),
-        giliranSelanjutnya.
+        asserta(ancamanHukuman(false)),
+        format('[i] ~w pasrah dan mengambil 4 kartu hukuman.~n', [Pemain])
+    ;   Jumlah = 1,
+        format('[i] ~w mengambil 1 kartu dari tumpukan.~n', [Pemain])
+    ),
+    tarikKartu(Pemain, Jumlah),
+    giliranSelanjutnya.
 
 ambilSejumlahKartu(JumlahKartu, DaftarKartuTerpilih) :-
     deck(DeckAwal),
@@ -169,7 +183,7 @@ uni(IndeksMentah):-
 /* Uni Invalid */
 uni(_) :-
 	giliran(Pemain),
-	format('[!] Perintah uni tidak valid! ~w mendapat 1 kartu penalti.', [Pemain]), nl,
+	format('[!] Perintah uni tidak valid! ~w mendapat 1 kartu penalti.~n', [Pemain]),
 	tarikKartu(Pemain, 1),
     giliranSelanjutnya, !.
 

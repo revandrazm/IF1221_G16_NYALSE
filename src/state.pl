@@ -10,7 +10,8 @@
 :- dynamic(memilihWarna/1).         % Status dapat menggunakan pilihWarna (true/false)
 :- dynamic(ancamanHukuman/1).       % terancam terkena plus four (true/false)
 :- dynamic(osSistem/1).             % Tipe OS: windows / unix
+:- dynamic(infoKartuDitarik/2).     % Menyimpan info kartu ditarik, infoKartuDitarik(Pemain, DaftarKartu)
 
 /* Bonus */
 :- dynamic(aksiTerakhir/1).			% Kartu aksi terakhir
-:- dynamic(efekMimic/1).				% Efek yang disalin oleh mimic
+:- dynamic(efekMimic/1).			% Efek yang disalin oleh mimic
